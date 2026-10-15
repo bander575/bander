@@ -1,0 +1,246 @@
+<!doctype html><html lang="ar" dir="rtl"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#244a2e"><title>مملكة النمل 🐜</title>
+<style>
+*{box-sizing:border-box}body{margin:0;color:#37220f;background:radial-gradient(circle at 50% 0,#f6f3d8,#d7dfbf 70%);font-family:system-ui,-apple-system,Tahoma,sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;touch-action:manipulation;cursor:pointer}
+#game{margin:auto;max-width:946px;background:linear-gradient(180deg,#415d2c 0,#81512d 40%,#604021 100%);padding:6px 6px 16px;box-shadow:0 0 42px #22381066;min-height:100vh}
+.header{position:relative;aspect-ratio:941/145;background:url('about:blank') center/100% 100% no-repeat;border-radius:13px 13px 2px 2px;margin-bottom:8px}
+.reset{position:absolute;left:3%;top:19%;border:2px solid #b9b39b;color:#735b38;border-radius:50%;background:#fff3c5ec;aspect-ratio:1;padding:0;width:8%;font-size:clamp(13px,4.2vw,29px);display:grid;place-items:center;box-shadow:0 4px 0 #69431d}
+.stats{direction:ltr;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:0 0 10px}
+.stat{direction:rtl;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;border:3px solid #8c6437;border-radius:22px;padding:9px 3px 7px;min-height:96px;box-shadow:inset 0 2px 0 #fffdf5,0 5px 0 #392715;background:linear-gradient(153deg,#fffdf2,#eee5cb);text-align:center}
+.st-label{font-size:clamp(12px,2.9vw,18px);font-weight:850;color:#5c4a31;white-space:nowrap}
+.st-number{font-size:clamp(26px,6vw,41px);line-height:1.18;color:#382818;font-weight:1000;font-variant-numeric:tabular-nums;text-shadow:0 1px 0 #fff}
+.st-icon{position:absolute;width:28%;max-width:80px;right:2%;top:34%;pointer-events:none}.st-icon img{width:100%;max-height:45px;object-fit:contain}
+.field-frame{border:8px solid #945c30;background:#9e6b36;border-radius:24px;box-shadow:inset 0 0 0 3px #d5a56b,0 9px 0 #462810;overflow:hidden;position:relative}
+.playfield{position:relative;width:100%;aspect-ratio:902/672;background-image:url('about:blank');background-size:100% 100%;background-position:center;overflow:hidden;touch-action:manipulation}
+.sweet{position:absolute;border:0;background:none;outline:0;padding:0;transform:translate(-50%,-50%);width:13%;aspect-ratio:1;z-index:4;filter:drop-shadow(0 6px 3px #76502344);transition:filter .15s,opacity .18s}
+.sweet img{width:100%;height:100%;object-fit:contain;pointer-events:none;animation:sweetFloat 2.3s ease-in-out infinite alternate}
+.sweet:active{filter:drop-shadow(0 0 12px #fadc35) brightness(1.2)}.sweet.busy{filter:drop-shadow(0 0 8px #ffc700)}.sweet.taken{opacity:0;pointer-events:none}
+@keyframes sweetFloat{to{transform:translateY(-4px)}}
+.ant{position:absolute;z-index:5;transform:translate(-50%,-50%);width:11.5%;aspect-ratio:1;pointer-events:none;will-change:left,top;filter:drop-shadow(1px 5px 3px #3b291833)}
+.ant img{width:100%;height:100%;object-fit:contain;animation:antBob .3s ease-in-out infinite alternate}
+.ant.turn img{transform:scaleX(-1)}
+.ant .cargo{position:absolute;width:37%;height:37%;right:0;top:-5%;display:none;filter:drop-shadow(0 2px 2px #654)}.ant.hasCargo .cargo{display:block}
+@keyframes antBob{to{margin-top:-2px}}
+.ripple{position:absolute;z-index:6;transform:translate(-50%,-50%);height:22px;width:22px;pointer-events:none;border:3px solid #ffb428;border-radius:50%;animation:ripple .65s ease-out forwards}
+@keyframes ripple{to{opacity:0;height:75px;width:75px}}
+.float{position:absolute;z-index:7;background:#fff5d3;color:#367f2b;border:2px solid #8eaa62;border-radius:99px;font-size:clamp(13px,2.2vw,19px);padding:4px 8px;font-weight:900;transform:translate(-50%,-50%);pointer-events:none;animation:pop .9s ease-out forwards}
+@keyframes pop{to{opacity:0;transform:translate(-50%,-180%)}}
+.progress-frame{background:#fff5da;border:4px solid #a87139;box-shadow:inset 0 2px 0 #fff9eb;border-radius:19px;margin:12px 2px 6px;padding:12px 10px;display:flex;align-items:center;gap:10px;font-weight:900;color:#6c4728;font-size:clamp(12px,3.1vw,19px)}
+.progress-frame .bar{height:16px;background:#c7b697;border-radius:18px;overflow:hidden;flex:1;border:2px solid #bba37d;min-width:50px}.progress-frame .bar div{height:100%;width:0;background:linear-gradient(#8ee65f,#3d9d34);transition:width .3s;border-radius:18px}.progress-frame .counter{white-space:nowrap;font-variant-numeric:tabular-nums}
+.help{padding:7px 12px;color:#fff1ce;font-weight:750;text-align:center;font-size:clamp(12px,3vw,18px);text-shadow:0 2px 3px #3e2918}
+.store{border:4px solid #69401e;background:linear-gradient(180deg,#9a6338,#663b1d);padding:12px 8px;border-radius:22px;box-shadow:inset 0 2px 0 #d39655;margin-top:10px}
+.store-title{width:fit-content;margin:-2px auto 12px;padding:6px 28px;background:linear-gradient(#587a35,#2a542a);border:3px solid #8db84b;border-radius:20px;color:#ffeec0;font-size:clamp(17px,4.2vw,27px);font-weight:900;text-shadow:0 3px 0 #21371b;box-shadow:0 5px 0 #38251c}
+.upgrades{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.up-card{background:linear-gradient(180deg,#fff9e9,#f3ddb2);border:3px solid #ca9c5b;border-radius:18px;padding:7px;box-shadow:inset 0 3px 0 #fffdf4,0 5px 0 #492a19;min-width:0;text-align:center}
+.up-card .drawing{height:65px;display:grid;place-items:center}.up-card .drawing img{max-width:90%;max-height:62px;object-fit:contain}
+.up-card .name{font-size:clamp(12px,2.6vw,17px);font-weight:950}.up-card .desc{font-size:clamp(9px,2vw,13px);color:#755c3f;min-height:27px}.up-card .level{font-size:clamp(10px,2vw,14px);color:#5c7839;font-weight:800}
+.buy{background:linear-gradient(#7bc94f,#30882f);border:3px solid #316a2c;border-radius:12px;width:100%;color:white;font-weight:1000;font-size:clamp(16px,3.3vw,24px);padding:6px 4px;box-shadow:inset 0 2px 0 #a9ed8a,0 3px 0 #244d25;text-shadow:0 2px 2px #255218}.buy:disabled{opacity:.56;filter:saturate(.65)}
+.areas{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:13px}.area{background:#583c23;border:3px solid #bc9158;border-radius:15px;color:#fff6d5;padding:6px 3px 9px;font-weight:900;font-size:clamp(12px,3.1vw,19px);box-shadow:0 4px 0 #402513}.area .thumb{border-radius:8px;background:linear-gradient(#c5eac0,#e0c19d);font-size:clamp(26px,5vw,40px);padding:8px;margin-bottom:4px}.area:disabled{filter:grayscale(.9);opacity:.65}.area.selected{border-color:#ffe273;box-shadow:0 0 11px #ffe186,0 4px 0 #402513}
+#toast{position:fixed;z-index:1000;bottom:35px;left:50%;transform:translate(-50%,20px);background:#2a5b30;color:#fff8db;font-weight:900;border:3px solid #a3ba68;border-radius:28px;padding:13px 20px;max-width:90%;text-align:center;opacity:0;pointer-events:none;transition:.2s;box-shadow:0 8px 17px #0005}#toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:600px){.up-card .drawing{height:96px}.up-card .drawing img{max-height:90px}.up-card{padding:12px}.stat{min-height:110px}}
+@media(max-width:390px){.stat{min-height:82px;border-radius:14px}.st-icon{display:none}.field-frame{border-width:5px}.up-card{border-width:2px}.store{padding:8px 5px}.up-card .drawing{height:53px}.up-card .drawing img{max-height:52px}}
+
+/* ADD-ONS for the illustrated edition. Original backgrounds, header, and sprite CSS remain untouched. */
+#game .header .nest-open{position:absolute;right:2%;top:17%;border:2px solid #b9b39b;color:#644124;border-radius:13px;background:#fff3c5f2;padding:7px 9px;font-weight:900;font-size:clamp(10px,2.8vw,15px);box-shadow:0 4px 0 #69431d;z-index:3}
+.ext-stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:0 0 10px}.ext-pill{background:linear-gradient(#fdf6e3,#f2dfb6);border:3px solid #946539;border-radius:16px;padding:8px 12px;color:#50371d;text-align:center;box-shadow:0 4px 0 #392715;font-weight:900;font-size:clamp(12px,3vw,17px)}
+.ext-pill b{font-size:clamp(17px,4.1vw,24px);color:#28512a;margin:0 4px}
+.legendary{position:absolute;border:0;background:transparent;outline:0;padding:0;transform:translate(-50%,-50%);width:21%;aspect-ratio:1;z-index:4;filter:drop-shadow(0 0 12px #fccc36);animation:legendFloat 1.8s ease-in-out infinite alternate}.legendary img{width:100%;height:100%;object-fit:contain;pointer-events:none}.legendary.busy{filter:drop-shadow(0 0 18px #fed963)}.legendary.taken{opacity:0;pointer-events:none}.legendLabel{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);background:#ffe46b;border:2px solid #bb832a;border-radius:99px;padding:3px 6px;color:#6c3c15;font-weight:900;font-size:clamp(9px,2vw,14px);white-space:nowrap;pointer-events:none}@keyframes legendFloat{to{margin-top:-5px;filter:drop-shadow(0 0 16px #ffc247)}}
+.ant.fast img.antbody{filter:hue-rotate(50deg) saturate(1.3)}.ant.strong img.antbody{transform:scale(1.15);filter:hue-rotate(-18deg) brightness(.9)}.ant.guard img.antbody{filter:hue-rotate(-28deg) saturate(1.2) contrast(1.15)}.ant.guard:before{content:'🛡';position:absolute;right:10%;top:-8%;font-size:clamp(11px,2.2vw,20px);z-index:7}.ant .typeLabel{position:absolute;top:-11%;left:6%;padding:1px 4px;border-radius:5px;background:#fff4cbaa;color:#543012;font-weight:800;font-size:clamp(7px,1.4vw,12px)}
+.ant.guard.fighting{filter:drop-shadow(0 0 12px #ff8175)}
+.enemy{position:absolute;width:10%;aspect-ratio:1;transform:translate(-50%,-50%);z-index:5;cursor:pointer;filter:drop-shadow(1px 5px 3px #422d1a55)}.enemy svg{width:100%;height:100%}.enemy .enemyTag{position:absolute;top:-17px;left:50%;transform:translateX(-50%);background:#fff1c9;border:2px solid #b37f4b;border-radius:99px;padding:2px 5px;white-space:nowrap;color:#704122;font-weight:900;font-size:clamp(9px,1.9vw,12px)}
+.extra-tools{margin-top:12px;border:4px solid #69401e;background:linear-gradient(180deg,#9a6338,#663b1d);padding:9px;border-radius:22px;box-shadow:inset 0 2px 0 #d39655}.extra-tools h3{margin:0 auto 10px;color:#fff0c6;text-align:center;font-size:clamp(18px,4vw,26px);text-shadow:0 2px #4a2815}.kindgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.management{margin-top:12px}.manage-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.m-tab{border:3px solid #7d4f27;background:linear-gradient(180deg,#f5e3bf,#dfbf88);border-radius:18px;padding:10px 8px;font-weight:1000;font-size:clamp(13px,3vw,20px);color:#5b381d;box-shadow:0 5px 0 #4b2b17}.m-tab.active{background:linear-gradient(180deg,#7ccf57,#469436);color:#fff9d9;border-color:#2f652a;text-shadow:0 2px 0 #28551f}.m-panel{display:none}.m-panel.active{display:block}.quickNest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quickRoom{background:linear-gradient(180deg,#fff9e9,#f3ddb2);border:3px solid #ca9c5b;border-radius:18px;padding:10px;box-shadow:inset 0 3px 0 #fffdf4,0 5px 0 #492a19;text-align:center}.qName{font-weight:1000;font-size:clamp(13px,3vw,18px);color:#54341d}.qLv{font-size:clamp(12px,2.6vw,16px);font-weight:900;color:#2e5b2f;margin-top:5px}.qFx{font-size:clamp(10px,2.2vw,14px);color:#775b3d;margin-top:4px}.nestActions{margin-top:10px}.nestEnter{width:100%;border:3px solid #316a2c;background:linear-gradient(#7bc94f,#30882f);border-radius:15px;color:#fff;font-weight:1000;font-size:clamp(16px,3.4vw,24px);padding:10px 8px;box-shadow:inset 0 2px 0 #a9ed8a,0 4px 0 #244d25;text-shadow:0 2px 2px #255218}.area-note{margin-top:10px;text-align:center;color:#fff0c6;font-weight:800;font-size:clamp(12px,2.8vw,16px)}#areaDecor{position:absolute;inset:0;pointer-events:none;z-index:1}.scene-piece{position:absolute}.scene-piece img{display:block}.scene-sofa{left:56%;top:17%;width:30%;height:18%;background:linear-gradient(180deg,#8dc0d0,#4f8faa);border:6px solid #eef7f8;border-radius:20px 20px 15px 15px;box-shadow:0 8px 0 rgba(0,0,0,.12)}.scene-sofa:before,.scene-sofa:after{content:"";position:absolute;bottom:-12%;width:18%;height:22%;background:#6d4a31;border-radius:6px}.scene-sofa:before{left:10%}.scene-sofa:after{right:10%}.scene-rug{left:26%;top:61%;width:54%;height:22%;background:radial-gradient(circle at center,#f5e5c1 0,#e3ba78 58%,#c7843e 100%);border-radius:50%;opacity:.92}.scene-table{left:50%;top:50%;width:18%;height:10%;background:linear-gradient(180deg,#b77642,#8b552d);border-radius:20px;box-shadow:0 6px 0 rgba(0,0,0,.15)}.scene-remote{left:59%;top:53%;width:8%;height:3%;background:#2f3339;border-radius:12px;transform:rotate(-15deg)}.scene-grass{left:0;right:0;bottom:0;height:40%;background:linear-gradient(180deg,rgba(126,194,92,.88),rgba(82,151,66,.95));clip-path:polygon(0 16%,12% 9%,23% 18%,35% 8%,47% 17%,58% 7%,72% 20%,85% 9%,100% 16%,100% 100%,0 100%)}.scene-stone{width:12%;height:7%;background:#d8dccb;border-radius:40px;box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}.scene-bush{width:18%;height:14%;background:radial-gradient(circle at 30% 40%,#8fda72 0,#60a94b 65%,#477d34 100%);border-radius:50%}.scene-berry{font-size:36px}.scene-crate{width:18%;height:16%;background:linear-gradient(180deg,#b47a42,#89562b);border:5px solid #6f4320;border-radius:10px;box-shadow:inset 0 0 0 3px rgba(255,236,186,.2)}.scene-crate:before,.scene-crate:after{content:"";position:absolute;left:8%;right:8%;height:5px;background:#6e4526}.scene-crate:before{top:30%}.scene-crate:after{top:62%}.scene-sack{width:15%;height:20%;background:linear-gradient(180deg,#e5d6b0,#c8b284);border-radius:40% 40% 30% 30%;box-shadow:inset 0 -8px 0 rgba(0,0,0,.06)}.scene-sack:before{content:"";position:absolute;left:25%;right:25%;top:5%;height:10%;background:#9a7652;border-radius:20px}.scene-jar{width:10%;height:15%;background:rgba(213,235,241,.86);border:4px solid rgba(165,196,205,.9);border-radius:12px 12px 15px 15px}.scene-roof{left:0;right:0;top:0;height:55%;background:linear-gradient(180deg,rgba(142,221,255,.78),rgba(218,245,255,.4));}.scene-rail{left:0;right:0;top:48%;height:8%;background:linear-gradient(180deg,#d5d0c6,#a1a29d);box-shadow:0 3px 0 rgba(0,0,0,.1)}.scene-pot{width:12%;height:16%;background:linear-gradient(180deg,#b86d3c,#8b4826);border-radius:0 0 12px 12px}.scene-pot:before{content:"🌿";position:absolute;left:50%;top:-45%;transform:translateX(-50%);font-size:28px}.scene-table-round{width:22%;height:14%;background:linear-gradient(180deg,#ba7844,#875228);border-radius:50%;box-shadow:0 6px 0 rgba(0,0,0,.12)}.scene-cake{font-size:40px}.scene-dining{left:31%;top:42%;width:38%;height:18%;background:linear-gradient(180deg,#bb7b47,#885329);border-radius:20px;box-shadow:0 8px 0 rgba(0,0,0,.12)}.scene-chair{width:11%;height:17%;background:#91bfce;border-radius:16px;box-shadow:0 5px 0 rgba(0,0,0,.12)}@media(max-width:600px){.quickNest{grid-template-columns:1fr 1fr}.manage-tabs{grid-template-columns:1fr 1fr 1fr}}.type-card{background:linear-gradient(180deg,#fff9e9,#f3ddb2);border:3px solid #ca9c5b;border-radius:16px;padding:8px 5px;text-align:center;color:#48331d;box-shadow:inset 0 3px 0 #fffdf4,0 4px 0 #492a19}.type-card .kindpic{height:60px;position:relative;display:flex;justify-content:center}.type-card .kindpic img{max-width:90%;max-height:60px;object-fit:contain}.type-card.fast .kindpic img{filter:hue-rotate(50deg)}.type-card.strong .kindpic img{filter:hue-rotate(-18deg) brightness(.85)}.type-card.guard .kindpic img{filter:hue-rotate(-28deg) saturate(1.35)}.type-card .kindname{font-size:clamp(11px,2.7vw,16px);font-weight:900}.type-card .kinddesc{font-size:clamp(9px,2vw,12px);color:#795d40;min-height:30px}.type-card .kindqty{font-size:clamp(10px,2vw,13px);font-weight:900;color:#3f712d;padding:4px 0}
+.area.locked:disabled{filter:grayscale(.7);opacity:.75}
+/* illustrated underground nest panel */
+.nestOverlay{position:fixed;inset:0;display:none;background:#15231bcc;align-items:center;justify-content:center;padding:12px;z-index:1100}.nestOverlay.open{display:flex}.nestPanel{width:min(100%,720px);max-height:94vh;overflow:auto;border:9px solid #6c4424;border-radius:30px;background:linear-gradient(170deg,#754522,#3f291b);box-shadow:0 20px 60px #0008;padding:10px}.nestHead{display:flex;justify-content:space-between;gap:8px;align-items:center;background:#a56735;color:#fff1c8;border-radius:19px;padding:10px 13px;font-weight:900;font-size:clamp(20px,5vw,29px)}.nestClose{border:2px solid #fff0c5;background:#fae6b6;color:#6b4527;border-radius:15px;padding:7px 13px;font-weight:900}
+.nestArt{position:relative;border:5px solid #bb8852;border-radius:18px;background:radial-gradient(circle at 45% 38%,#bc8144,#8d5129 65%,#62391e);padding:18px 10px;overflow:hidden}.nestArt:before{content:'';position:absolute;top:44%;left:-10%;width:125%;height:24px;border-radius:20px;background:#4c2d1c;transform:rotate(-13deg);box-shadow:0 0 0 7px #dca76b66}.nestGrid{display:grid;position:relative;z-index:1;grid-template-columns:1fr 1fr;gap:14px}.nestRoom{background:radial-gradient(ellipse at center,#f5d29d,#c68e52 80%);box-shadow:inset 0 -11px 0 #a9663799,0 7px 0 #4c2d1c;border:5px solid #7a4726;border-radius:50% 44% 48% 45%;padding:17px 8px;text-align:center;min-height:152px;color:#573b21}.nestRoom img{width:55px;height:55px;object-fit:contain;display:block;margin:0 auto}.nestRoom b{display:block;font-weight:900;font-size:clamp(15px,3vw,20px);margin:5px}.nestRoom span{font-weight:850;color:#775133;font-size:clamp(12px,2.4vw,16px)}
+@media(max-width:540px){.kindgrid{grid-template-columns:repeat(2,minmax(0,1fr))}.type-card .kinddesc{min-height:24px}.nestRoom{min-height:128px;padding:13px 6px}.nestRoom img{width:45px;height:45px}}
+
+/* Four upgradable illustrated nest rooms (v4) */
+.nestArt{padding:13px 8px 18px}
+.nestRoom{border-radius:34% 34% 26% 26%;padding:14px 7px 15px;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px}
+.nestRoom .nestLevel{display:block;color:#5e391b;font-size:clamp(12px,2.7vw,17px);background:#ffe7a5;border:2px solid #ad7540;border-radius:99px;padding:2px 10px;font-weight:900;box-shadow:inset 0 1px 0 #fff9db}
+.nestRoom .nestBenefit{font-size:clamp(10px,2.6vw,14px);font-weight:850;line-height:1.35;min-height:37px;max-width:96%;color:#684422}
+.nestRoom .nestEffect{font-size:clamp(10px,2.5vw,13px);color:#3d672f;line-height:1.3;font-weight:900;min-height:24px}
+.nestRoom .nestBuy{border:2px solid #316b2b;color:white;background:linear-gradient(#89d15c,#328e2c);border-radius:13px;box-shadow:inset 0 2px 0 #b8f09b,0 3px 0 #285c26;font-weight:950;width:min(100%,180px);min-height:38px;padding:5px;font-size:clamp(12px,2.8vw,17px);margin-top:auto}
+.nestRoom .nestBuy:disabled{opacity:.58;filter:saturate(.65);box-shadow:none}
+.nestNotice{margin:10px 0 2px;padding:9px;background:#ffedc3;border:2px solid #b47f45;border-radius:15px;color:#69401f;font-size:clamp(11px,2.9vw,15px);font-weight:900;text-align:center}
+.nestRoom .nestMeter{display:flex;gap:3px;margin:3px 0 4px;justify-content:center;max-width:100%}
+.nestRoom .nestMeter i{height:6px;width:10px;border-radius:5px;background:#eed2a0;box-shadow:inset 0 0 2px #6542}
+.nestRoom .nestMeter i.on{background:#65b445}
+@media(max-width:540px){.nestGrid{gap:7px}.nestRoom{min-height:220px;padding:11px 4px 12px;border-width:4px}.nestRoom b{font-size:clamp(12px,3.4vw,17px);margin:2px}.nestRoom img{width:44px;height:44px}.nestRoom .nestBenefit{min-height:42px}.nestRoom .nestEffect{min-height:30px}.nestRoom .nestBuy{min-height:38px}.nestRoom .nestLevel{padding:2px 5px}}
+</style>
+<link rel="stylesheet" href="./header.css"><link rel="stylesheet" href="./scene.css"></head><body>
+<div id="game">
+<div class="header"><button class="reset" id="reset" title="إعادة اللعبة">⚙</button><button class="nest-open" id="nestOpen">🏠 داخل العش</button></div>
+<div class="stats">
+ <div class="stat"><span class="st-label">السكر</span><b class="st-number" id="sugar">0</b><span class="st-icon"><img data-sprite="pinkcandy"></span></div>
+ <div class="stat"><span class="st-label">النمل الفعلي</span><b class="st-number" id="ants">3</b><span class="st-icon"><img data-sprite="ant"></span></div>
+ <div class="stat"><span class="st-label">عدد الرحلات</span><b class="st-number" id="trips">0</b><span class="st-icon">🍪</span></div>
+</div>
+<div class="ext-stats"><div class="ext-pill">👑 حلوى أسطورية <b id="legendCount">0</b></div><div class="ext-pill">🛡️ حشرات مهزومة <b id="enemyCount">0</b></div></div>
+<div class="field-frame"><div class="playfield" id="field"><div id="areaDecor"></div></div></div>
+<div class="progress-frame"><span>فتح المنطقة التالية</span><div class="bar"><div id="progress"></div></div><span class="counter" id="progressLabel">0 / 120</span><span>🎁</span></div>
+<div class="help" id="help">👆 اضغط على الحلوى لتوجيه النمل — ما فيه جمع تلقائي</div>
+<div class="management">
+ <div class="manage-tabs">
+  <button class="m-tab active" data-tab="colony">🛠️ تطوير المستعمرة</button>
+  <button class="m-tab" data-tab="nest">🏠 العش</button>
+  <button class="m-tab" data-tab="areas">🗺️ المناطق</button>
+ </div>
+ <div class="m-panel active" id="panel-colony">
+   <div class="store"><div class="store-title">🌿 تطوير المستعمرة</div><div class="upgrades" id="upgrades"></div></div>
+   <div class="extra-tools"><h3>🐜 أنواع النمل</h3><div class="kindgrid" id="kindgrid"></div></div>
+ </div>
+ <div class="m-panel" id="panel-nest">
+   <div class="store nest-inline"><div class="store-title">🏠 قسم العش</div>
+     <div class="quickNest">
+       <div class="quickRoom"><div class="qName">👑 غرفة الملكة</div><div class="qLv" id="qQueen">مستوى 1</div><div class="qFx" id="qQueenFx">حد النمل 20</div></div>
+       <div class="quickRoom"><div class="qName">🍬 مخزن السكر</div><div class="qLv" id="qStorage">مستوى 1</div><div class="qFx" id="qStorageFx">السعة 1200</div></div>
+       <div class="quickRoom"><div class="qName">🥚 الحضانة</div><div class="qLv" id="qNursery">مستوى 1</div><div class="qFx" id="qNurseryFx">فقس كل 20 رحلة</div></div>
+       <div class="quickRoom"><div class="qName">🛡️ الحراسة</div><div class="qLv" id="qGuard">مستوى 1</div><div class="qFx" id="qGuardFx">حماية 10%</div></div>
+     </div>
+     <div class="nestActions"><button class="nestEnter" id="nestOpenInline">ادخل العش وطور الغرف</button></div>
+   </div>
+ </div>
+ <div class="m-panel" id="panel-areas">
+   <div class="store"><div class="store-title">🗺️ المناطق</div><div class="areas" id="areas"></div><div class="area-note" id="areaNote">كل منطقة سيكون لها شكلها الخاص، وليست مجرد تغيير ألوان.</div></div>
+ </div>
+</div></div>
+<div id="toast"></div>
+<div class="nestOverlay" id="nestOverlay"><div class="nestPanel">
+ <div class="nestHead"><span>🏠 مملكة النمل من الداخل</span><button class="nestClose" id="nestClose">✖ إغلاق</button></div>
+ <div class="nestNotice">طور كل غرفة من المستوى 1 إلى 10 بالسّكر 🍬 — وكل مستوى يؤثر على اللعب!</div>
+ <div class="nestArt"><div class="nestGrid">
+ <div class="nestRoom"><img data-sprite="ant"><b>👑 غرفة الملكة</b><span class="nestLevel" id="queenLevel">المستوى 1 / 10</span><div class="nestMeter" id="queenMeter"></div><div class="nestBenefit" id="nestQueen">النمل 20 حد أقصى</div><div class="nestEffect" id="queenEffect">مكافآت +0%</div><button class="nestBuy" data-nest="queen">🍬 تطوير</button></div>
+ <div class="nestRoom"><img data-sprite="pinkcandy"><b>🍬 مخزن السكر</b><span class="nestLevel" id="storageLevel">المستوى 1 / 10</span><div class="nestMeter" id="storageMeter"></div><div class="nestBenefit" id="nestStorage">المخزن 0 / 1200</div><div class="nestEffect" id="storageEffect">السعة 1200 سكر</div><button class="nestBuy" data-nest="storage">🍬 تطوير</button></div>
+ <div class="nestRoom"><img data-sprite="ant"><b>🥚 الحضانة</b><span class="nestLevel" id="nurseryLevel">المستوى 1 / 10</span><div class="nestMeter" id="nurseryMeter"></div><div class="nestBenefit" id="nestNursery">3 نملات</div><div class="nestEffect" id="nurseryEffect">فقس كل 20 رحلة</div><button class="nestBuy" data-nest="nursery">🍬 تطوير</button></div>
+ <div class="nestRoom"><img data-sprite="chocolate"><b>🛡️ غرفة الحراسة</b><span class="nestLevel" id="guardLevel">المستوى 1 / 10</span><div class="nestMeter" id="guardMeter"></div><div class="nestBenefit" id="nestGuard">0 حراس</div><div class="nestEffect" id="guardEffect">حماية السكر 10%</div><button class="nestBuy" data-nest="guard">🍬 تطوير</button></div>
+ </div></div>
+ </div></div>
+<script src="./sprites.js"></script>
+<script>(()=>{
+const $=id=>document.getElementById(id),field=$('field');
+const asset=k=>ASSETS[k];
+document.querySelectorAll('[data-sprite]').forEach(img=>img.src=asset(img.dataset.sprite));
+const types={worker:{label:'نملة عاملة',desc:'تحمل الحلوى العادية',speed:1,bag:1,cost:50},fast:{label:'نملة سريعة',desc:'توصل أسرع من العاملة',speed:1.55,bag:1,cost:75},strong:{label:'نملة قوية',desc:'تحمل سكرًا أكثر',speed:.78,bag:1.85,cost:105},guard:{label:'نملة حارسة',desc:'تطرد الحشرات وتحمي العش',speed:1.22,bag:1.05,cost:125}};
+const rooms=[{name:'المطبخ',icon:'🍳',goal:0,desc:'بداية اللعبة بين الرفوف والحلوى'},{name:'غرفة المعيشة',icon:'🛋️',goal:120,desc:'كنبة وسجادة وطاولة قهوة'},{name:'الحديقة',icon:'🌱',goal:450,desc:'عشب وزهور وفراولة وحشرات أكثر'},{name:'المخزن',icon:'🫙',goal:1000,desc:'صناديق وجرار وأكياس سكر'},{name:'السطح',icon:'🌤️',goal:1900,desc:'جو مفتوح وأصص ونباتات'},{name:'غرفة السفرة',icon:'🍽️',goal:3200,desc:'طاولة أكل وكيك وفواكه'}];
+const positions=[[58,46],[78,46],[67,67],[37,68],[85,76],[43,85]],candyKeys=['cupcake','cookie','pinkcandy','bluecandy','chocolate','lollipop'];
+const fresh=()=>({sugar:0,total:0,trips:0,speed:0,bag:0,rewardBoost:0,legendLuck:0,pathing:0,teamwork:0,alert:0,area:0,unlocked:0,ants:3,counts:{worker:3,fast:0,strong:0,guard:0},legendaryCollected:0,enemiesDefeated:0,nextLegendary:4,nextEnemy:6,nest:{queen:1,storage:1,nursery:1,guard:1},nextHatch:null});
+let state=fresh();
+try{const prev=JSON.parse(localStorage.getItem('ant-kingdom-art-plus-v4')||'null') || JSON.parse(localStorage.getItem('ant-kingdom-art-plus-v3')||'null');if(prev){state=Object.assign(fresh(),prev);state.counts=Object.assign(fresh().counts,prev.counts||{});state.nest=Object.assign(fresh().nest,prev.nest||{})}else{const old=JSON.parse(localStorage.getItem('ant-kingdom-art-v1')||'null');if(old){state=Object.assign(fresh(),{sugar:old.sugar||0,total:old.total||0,trips:old.trips||0,speed:old.speed||0,bag:old.bag||0,area:old.area||0,unlocked:old.unlocked||0,ants:old.ants||3,counts:{worker:Math.max(3,old.ants||3),fast:0,strong:0,guard:0}})}}}catch(e){}
+state.counts.worker=Math.max(3,Math.min(20,Number(state.counts.worker)||3));for(const k of ['fast','strong','guard'])state.counts[k]=Math.max(0,Math.min(20,Number(state.counts[k])||0));
+state.unlocked=Math.max(0,Math.min(rooms.length-1,Number(state.unlocked)||0));state.area=Math.max(0,Math.min(state.unlocked,Number(state.area)||0));
+state.nest=Object.assign(fresh().nest,state.nest||{});
+for(const id of ['queen','storage','nursery','guard'])state.nest[id]=Math.max(1,Math.min(10,Math.floor(Number(state.nest[id])||1)));
+if(state.nextHatch==null||!Number.isFinite(Number(state.nextHatch)))state.nextHatch=Number(state.trips||0)+hatchTrips();
+
+const ants=[],candies=[];let legendary=null,enemy=null,last=0,lastSave=0,toastTimer=null;
+function save(){try{localStorage.setItem('ant-kingdom-art-plus-v4',JSON.stringify(state))}catch(e){}}
+function toast(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('show'),1750)}
+const fmt=n=>Math.floor(n).toLocaleString('en-US');
+const nestDefs={
+ queen:{name:'غرفة الملكة',base:125,growth:1.61},
+ storage:{name:'مخزن السكر',base:95,growth:1.60},
+ nursery:{name:'الحضانة',base:115,growth:1.59},
+ guard:{name:'غرفة الحراسة',base:100,growth:1.60}
+};
+function nestCost(id){const level=state.nest[id];return level>=10?0:Math.round(nestDefs[id].base*Math.pow(nestDefs[id].growth,level-1))}
+function maxAnts(){return 20+2*(state.nest.queen-1)}
+function queenBonus(){return 1+0.05*(state.nest.queen-1)}
+function sugarCapacity(){return 1200+900*(state.nest.storage-1)}
+function hatchTrips(){return Math.max(6,20-2*(state.nest.nursery-1))}
+function hireDiscount(){return 1-Math.min(.27,.03*(state.nest.nursery-1))}
+function guardDefense(){return Math.min(.9,.10*state.nest.guard)}
+function rewardBonus(){return 1+state.rewardBoost*.14}
+function legendInterval(){return Math.max(4,8-state.legendLuck)}
+function pathBonus(){return 1+state.pathing*.08}
+function legendaryNeed(){return state.teamwork>=2?2:3}
+function enemySlow(){return Math.max(.55,1-state.alert*.08)}
+function depositSugar(amount){const add=Math.max(0,Math.min(Math.round(amount),Math.max(0,sugarCapacity()-state.sugar)));state.sugar+=add;if(add<amount)toast('📦 مخزن السكر ممتلئ — طوّر المخزن');return add}
+function checkHatch(){if(state.trips<state.nextHatch)return;state.nextHatch=state.trips+hatchTrips();if(ants.length>=maxAnts()){toast('🥚 وصلت الحضانة للحد الأقصى — طوّر الملكة');return}state.counts.worker++;syncAnts();toast('🥚 فقست نملة جديدة من الحضانة!')}
+function drawNest(){
+ const lines={
+  queen:{value:`الحد الأعلى ${maxAnts()} نملة`,effect:`مكافأة السكر +${Math.round((queenBonus()-1)*100)}%`},
+  storage:{value:`${fmt(state.sugar)} / ${fmt(sugarCapacity())} سكر`,effect:`سعة المخزن ${fmt(sugarCapacity())}`},
+  nursery:{value:`${fmt(ants.length)} نملة • القادم بعد ${fmt(Math.max(0,state.nextHatch-state.trips))} رحلة`,effect:`فقس كل ${hatchTrips()} رحلة • خصم ${Math.round((1-hireDiscount())*100)}%`},
+  guard:{value:`${fmt(state.counts.guard)} حراس • ${fmt(state.enemiesDefeated)} أعداء`,effect:`حماية السكر ${Math.round(guardDefense()*100)}%`}
+ };
+ for(const [id,v] of Object.entries(lines)){
+  $(id+'Level').textContent=`المستوى ${state.nest[id]} / 10`;
+  $(id+'Meter').innerHTML=Array.from({length:10},(_,i)=>`<i class="${i<state.nest[id]?'on':''}"></i>`).join('');
+  $('nest'+id[0].toUpperCase()+id.slice(1)).textContent=v.value;
+  $(id+'Effect').textContent=v.effect;
+  const b=document.querySelector('[data-nest="'+id+'"]');
+  b.disabled=state.nest[id]>=10||state.sugar<nestCost(id);
+  b.textContent=state.nest[id]>=10?'🏆 مكتمل':`🍬 تطوير ${fmt(nestCost(id))}`;
+ }
+}
+function makeAnt(t){const node=document.createElement('div');node.className='ant '+t;node.innerHTML='<img class="antbody" src="'+asset('ant')+'"><img class="cargo" src="'+asset('pinkcandy')+'"><span class="typeLabel">'+({worker:'',fast:'⚡',strong:'💪',guard:'🛡'}[t])+'</span>';field.appendChild(node);return {type:t,x:17+Math.random()*4,y:68+Math.random()*6,phase:'idle',target:null,node,speed:types[t].speed,bag:types[t].bag,cargoKey:'pinkcandy'}}
+function syncAnts(){const desired=[];for(const [k,n]of Object.entries(state.counts))for(let i=0;i<n;i++)desired.push(k);while(ants.length<desired.length)ants.push(makeAnt(desired[ants.length]));while(ants.length>desired.length)ants.pop().node.remove();state.ants=desired.length;}
+function drawAnt(a){a.node.style.left=a.x+'%';a.node.style.top=a.y+'%';a.node.classList.toggle('hasCargo',a.phase==='back'||a.phase==='backLegend');a.node.classList.toggle('turn',a.phase==='back'||a.phase==='backLegend');a.node.classList.toggle('fighting',a.phase==='intercept');a.node.querySelector('.cargo').src=asset(a.cargoKey)}
+function makeCandy(i){const node=document.createElement('button');node.type='button';node.className='sweet';node.setAttribute('aria-label','جمع قطعة '+(i+1));node.style.left=positions[i][0]+'%';node.style.top=positions[i][1]+'%';const kind=candyKeys[(i+state.area)%candyKeys.length];node.innerHTML='<img src="'+asset(kind)+'">';field.appendChild(node);const c={x:positions[i][0],y:positions[i][1],kind,node,stock:true,busy:false,respawn:0,base:[12,8,9,11,14,16][i]};node.addEventListener('click',()=>send(c));return c}
+function buildCandy(){for(const c of candies)c.node.remove();candies.length=0;for(let i=0;i<positions.length;i++)candies.push(makeCandy(i));if(legendary){legendary.node.remove();legendary=null;}if(enemy){enemy.node.remove();enemy=null;}}
+function renderAreaDecor(){const d=$('areaDecor'); if(!d) return; const a=state.area; const scenes=[
+'',
+'<div class="scene-piece scene-rug"></div><div class="scene-piece scene-sofa"></div><div class="scene-piece scene-table"></div><div class="scene-piece scene-remote"></div>',
+'<div class="scene-piece scene-grass"></div><div class="scene-piece scene-bush" style="left:6%;top:48%"></div><div class="scene-piece scene-bush" style="right:8%;top:44%"></div><div class="scene-piece scene-stone" style="left:30%;top:63%"></div><div class="scene-piece scene-stone" style="left:43%;top:58%"></div><div class="scene-piece scene-stone" style="left:57%;top:66%"></div><div class="scene-piece scene-berry" style="left:72%;top:30%">🍓</div><div class="scene-piece scene-berry" style="left:22%;top:24%">🍓</div>',
+'<div class="scene-piece scene-crate" style="left:59%;top:53%"></div><div class="scene-piece scene-crate" style="left:78%;top:45%"></div><div class="scene-piece scene-sack" style="left:20%;top:48%"></div><div class="scene-piece scene-sack" style="left:33%;top:54%"></div><div class="scene-piece scene-jar" style="left:63%;top:26%"></div><div class="scene-piece scene-jar" style="left:76%;top:27%"></div>',
+'<div class="scene-piece scene-roof"></div><div class="scene-piece scene-rail"></div><div class="scene-piece scene-pot" style="left:20%;top:41%"></div><div class="scene-piece scene-pot" style="left:72%;top:41%"></div><div class="scene-piece scene-table-round" style="left:44%;top:58%"></div><div class="scene-piece scene-cake" style="left:49%;top:52%">🧁</div>',
+'<div class="scene-piece scene-dining"></div><div class="scene-piece scene-chair" style="left:22%;top:42%"></div><div class="scene-piece scene-chair" style="left:71%;top:42%"></div><div class="scene-piece scene-chair" style="left:22%;top:61%"></div><div class="scene-piece scene-chair" style="left:71%;top:61%"></div><div class="scene-piece scene-cake" style="left:45%;top:45%">🎂</div><div class="scene-piece scene-cake" style="left:57%;top:47%">🍇</div>'
+]; d.innerHTML=scenes[a]||'';}
+function ripple(x,y){const el=document.createElement('div');el.className='ripple';el.style.left=x+'%';el.style.top=y+'%';field.appendChild(el);setTimeout(()=>el.remove(),700)}
+function pop(msg,x,y){const el=document.createElement('div');el.className='float';el.textContent=msg;el.style.left=x+'%';el.style.top=y+'%';field.appendChild(el);setTimeout(()=>el.remove(),900)}
+function freeAnts(){return ants.filter(a=>a.phase==='idle')}
+function send(c){if(!c.stock||c.busy)return;ripple(c.x,c.y);if(c.legendary){const need=legendaryNeed(),available=freeAnts();if(available.length<need){toast('👑 الحلوى الأسطورية تحتاج '+need+' نملات فاضية');return}c.busy=true;c.node.classList.add('busy');c.assigned=available.slice(0,need);c.returned=0;c.claimed=false;c.assigned.forEach(a=>{a.target=c;a.phase='toLegend';a.cargoKey=c.kind});$('help').textContent='👑 '+need+' نملات رايحات للحلوى الأسطورية!';return;}
+const idle=freeAnts().sort((a,b)=>(a.type==='guard')-(b.type==='guard')||b.speed-a.speed);const a=idle[0];if(!a){toast('🐜 كل النمل مشغول الآن');return}c.busy=true;c.node.classList.add('busy');a.target=c;a.phase='to';a.cargoKey=c.kind;$('help').textContent='🐜 نملة رايحة للحلوى اللي اخترتها…'}
+function spawnLegend(){if(legendary||state.trips<state.nextLegendary)return;const node=document.createElement('button');node.type='button';node.className='legendary';node.style.left='48%';node.style.top='56%';node.innerHTML='<img src="'+asset('cupcake')+'"><span class="legendLabel">👑 أسطورية ×3</span>';field.appendChild(node);legendary={x:48,y:56,kind:'cupcake',node,stock:true,busy:false,assigned:[],returned:0,claimed:false,legendary:true};node.addEventListener('click',()=>send(legendary));state.nextLegendary=state.trips+legendInterval();toast('✨ ظهرت حلوى أسطورية!')}
+function makeEnemySVG(){return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="redbug" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#fb8c52"/><stop offset="1" stop-color="#ae2e29"/></linearGradient></defs><path d="M30 60L13 76 M37 65L33 86 M70 61L87 78 M65 70L69 87" stroke="#382a26" stroke-width="6" stroke-linecap="round"/><ellipse cx="51" cy="55" rx="33" ry="28" fill="#482b26"/><ellipse cx="52" cy="48" rx="30" ry="27" fill="url(#redbug)"/><path d="M52 22V73" stroke="#68231f" stroke-width="5"/><circle cx="38" cy="42" r="7" fill="#42251e"/><circle cx="66" cy="51" r="6" fill="#42251e"/><circle cx="37" cy="60" r="5" fill="#42251e"/><circle cx="56" cy="30" r="5" fill="#42251e"/><circle cx="33" cy="21" r="10" fill="#432e26"/><circle cx="30" cy="19" r="3" fill="white"/><path d="M24 14Q18 4 9 5 M39 15Q41 6 46 3" stroke="#382a26" stroke-width="4" fill="none"/></svg>`}
+function spawnEnemy(){if(enemy||state.area===0||state.trips<state.nextEnemy)return;const node=document.createElement('div');node.className='enemy';node.innerHTML=makeEnemySVG()+'<span class="enemyTag">🐞 حشرة</span>';field.appendChild(node);enemy={x:94,y:75,node,target:null};node.addEventListener('click',()=>sendGuard());state.nextEnemy=state.trips+8;toast('🐞 في حشرة قريبة من السكر!')}
+function sendGuard(){if(!enemy)return;let g=freeAnts().find(a=>a.type==='guard');if(g){g.target=enemy;g.phase='intercept';$('help').textContent='🛡️ الحارس يطرد الحشرة'}else toast('🛡️ وظّف نملة حارسة لحماية المستعمرة')}
+function step(a,x,y,dt){let dx=x-a.x,dy=y-a.y,d=Math.hypot(dx,dy),len=(17+state.speed*6)*pathBonus()*a.speed*(a.type==='guard'&&a.phase==='intercept'?(1+.22*(state.nest.guard-1)):1)*dt;if(d<=len||d===0){a.x=x;a.y=y;return true}a.x+=dx/d*len;a.y+=dy/d*len;return false}
+function reward(c,a){return Math.round(c.base*(1+state.bag*.4)*(1+state.area*.4)*(a?.bag||1)*queenBonus()*rewardBonus())}
+function unlock(){while(state.unlocked<rooms.length-1&&state.total>=rooms[state.unlocked+1].goal){state.unlocked++;toast('🎉 فتحت '+rooms[state.unlocked].name)}}
+function price(t){return Math.round(types[t].cost*Math.pow(1.36,state.counts[t]-(t==='worker'?3:0))*hireDiscount())}
+function cost(id){return Math.round(({speed:75,bag:100,rewardBoost:110,legendLuck:130,pathing:95,teamwork:120,alert:105})[id]*Math.pow(1.59,state[id]))}
+function drawUI(){ $('sugar').textContent=fmt(state.sugar);$('ants').textContent=fmt(ants.length);$('trips').textContent=fmt(state.trips);$('legendCount').textContent=fmt(state.legendaryCollected);$('enemyCount').textContent=fmt(state.enemiesDefeated);
+const next=rooms[state.unlocked+1];$('progressLabel').textContent=next?fmt(state.total)+' / '+fmt(next.goal):'مكتملة 🏆';$('progress').style.width=next?Math.min(100,100*state.total/next.goal)+'%':'100%';
+const upgrades=[['speed','سرعة السير','النمل يتحرك أسرع','ant','+'+Math.round(state.speed*6)+'% سرعة أساسية'],['bag','سعة الحمولة','سكر أكثر لكل رحلة','chocolate','+'+Math.round(state.bag*40)+'% حمولة'],['rewardBoost','مهارة الجمع','مكافآت أعلى لكل تسليم','pinkcandy','+'+Math.round((rewardBonus()-1)*100)+'% مكافآت'],['legendLuck','الحلوى النادرة','تظهر الحلوى الأسطورية أسرع','cupcake','كل '+legendInterval()+' رحلات تقريبًا'],['pathing','ذكاء المسارات','النمل يمشي بكفاءة أعلى','bluecandy','+'+Math.round((pathBonus()-1)*100)+'% حركة'],['teamwork','النقل الجماعي','يساعد في حمل الحلوى الكبيرة','cookie',legendaryNeed()+' نملات للحلوى الأسطورية'],['alert','كشف الأعداء','يبطّئ تقدم الحشرات','lollipop',Math.round((1-enemySlow())*100)+'% إبطاء للأعداء']];$('upgrades').innerHTML=upgrades.map(([id,name,desc,icon,info])=>'<div class="up-card"><div class="drawing"><img src="'+asset(icon)+'"></div><div class="name">'+name+'</div><div class="desc">'+desc+'</div><div class="level">'+info+'</div><button class="buy" data-up="'+id+'" '+(state.sugar<cost(id)?'disabled':'')+'>🍬 '+fmt(cost(id))+'</button></div>').join('');
+$('kindgrid').innerHTML=Object.keys(types).map(t=>'<div class="type-card '+t+'"><div class="kindpic"><img src="'+asset('ant')+'"></div><div class="kindname">'+types[t].label+'</div><div class="kinddesc">'+types[t].desc+'</div><div class="kindqty">عندك '+fmt(state.counts[t])+'</div><button class="buy" data-hire="'+t+'" '+(state.sugar<price(t)||ants.length>=maxAnts()?'disabled':'')+'>🍬 '+fmt(price(t))+'</button></div>').join('');
+$('areas').innerHTML=rooms.map((r,i)=>'<button class="area '+(i===state.area?'selected':'')+' '+(i>state.unlocked?'locked':'')+'" data-area="'+i+'" '+(i>state.unlocked?'disabled':'')+'><div class="thumb">'+(i>state.unlocked?'🔒':r.icon)+'</div><div>'+r.name+'</div><small style="display:block;opacity:.85;font-size:12px;margin-top:4px">'+(i>state.unlocked?('يفتح عند '+fmt(r.goal)+' سكر'):r.desc)+'</small></button>').join('');
+if($('areaNote')) $('areaNote').textContent='المنطقة الحالية: '+rooms[state.area].name+' — '+rooms[state.area].desc;
+if($('qQueen')){$('qQueen').textContent='المستوى '+state.nest.queen;$('qQueenFx').textContent='حد النمل '+maxAnts();$('qStorage').textContent='المستوى '+state.nest.storage;$('qStorageFx').textContent='سعة '+fmt(sugarCapacity())+' سكر';$('qNursery').textContent='المستوى '+state.nest.nursery;$('qNurseryFx').textContent='فقس كل '+hatchTrips()+' رحلة';$('qGuard').textContent='المستوى '+state.nest.guard;$('qGuardFx').textContent='حماية '+Math.round(guardDefense()*100)+'%';}
+drawNest();}
+$('upgrades').addEventListener('click',e=>{const b=e.target.closest('[data-up]');if(!b)return;const id=b.dataset.up,p=cost(id);if(state.sugar<p)return;state.sugar-=p;state[id]++;toast('✅ تم التطوير');drawUI();save()});
+$('kindgrid').addEventListener('click',e=>{const b=e.target.closest('[data-hire]');if(!b)return;const t=b.dataset.hire,p=price(t);if(state.sugar<p||ants.length>=maxAnts())return;state.sugar-=p;state.counts[t]++;syncAnts();toast('🐜 اشتريت '+types[t].label);drawUI();save()});
+$('areas').addEventListener('click',e=>{const b=e.target.closest('[data-area]');if(!b)return;const i=Number(b.dataset.area);if(i>state.unlocked||i===state.area)return;state.area=i;for(const c of candies){c.stock=true;c.busy=false;c.respawn=0;c.node.classList.remove('busy','taken');c.node.querySelector('img').src=asset(candyKeys[(candies.indexOf(c)+i)%candyKeys.length]);}
+if(legendary){legendary.node.remove();legendary=null}if(enemy){enemy.node.remove();enemy=null}
+for(const a of ants){a.phase='idle';a.target=null;a.x=18+Math.random()*3;a.y=67+Math.random()*7;a.node.classList.remove('turn','hasCargo')}
+renderAreaDecor();toast('📍 دخلت '+rooms[i].name);drawUI();save()});
+document.querySelectorAll('.m-tab').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.m-tab').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.m-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+btn.dataset.tab));}));
+const openNest=()=>{$('nestOverlay').classList.add('open');drawUI()};
+$('nestOpen').addEventListener('click',openNest); if($('nestOpenInline')) $('nestOpenInline').addEventListener('click',openNest);
+document.querySelector('.nestGrid').addEventListener('click',e=>{
+ const btn=e.target.closest('[data-nest]');if(!btn)return;
+ const id=btn.dataset.nest,oldLvl=state.nest[id],p=nestCost(id);
+ if(oldLvl>=10||state.sugar<p)return;
+ state.sugar-=p;state.nest[id]++;
+ if(id==='nursery')state.nextHatch=Math.min(state.nextHatch,state.trips+hatchTrips());
+ drawUI();save();toast('✅ تطورت '+nestDefs[id].name+' للمستوى '+state.nest[id]);
+});$('nestClose').addEventListener('click',()=>$('nestOverlay').classList.remove('open'));$('nestOverlay').addEventListener('click',e=>{if(e.target.id==='nestOverlay')$('nestOverlay').classList.remove('open')});
+$('reset').addEventListener('click',()=>{if(!confirm('هل تريد بدء مستعمرة جديدة؟'))return;localStorage.removeItem('ant-kingdom-art-plus-v4');localStorage.removeItem('ant-kingdom-art-plus-v3');localStorage.removeItem('ant-kingdom-art-v1');location.reload()});
+function frame(t){const dt=last?Math.min(.06,(t-last)/1000):0;last=t;lastSave+=dt;
+for(const c of candies)if(c.respawn>0){c.respawn-=dt;if(c.respawn<=0){c.stock=true;c.busy=false;c.node.classList.remove('busy','taken')}}
+for(const a of ants){if(a.phase==='to'&&a.target){if(step(a,a.target.x,a.target.y,dt)){a.phase='back';a.target.stock=false;a.target.node.classList.add('taken');a.target.respawn=3;}}
+else if(a.phase==='back'&&a.target){if(step(a,15,67,dt)){const c=a.target,amount=reward(c,a);const gained=depositSugar(amount);state.total+=gained;state.trips++;checkHatch();c.busy=false;a.target=null;a.phase='idle';pop('+'+gained+' 🍬',18,65);unlock();spawnLegend();spawnEnemy();drawUI();save();$('help').textContent='✅ وصلت الحلوى للعش وزاد السكر';}}
+else if(a.phase==='toLegend'&&a.target){const c=a.target;if(step(a,c.x,c.y,dt)){a.phase='waitLegend';if(c.assigned.every(v=>v.phase==='waitLegend')){c.stock=false;c.node.classList.add('taken');for(const v of c.assigned)v.phase='backLegend';}}}
+else if(a.phase==='backLegend'&&a.target){const c=a.target;if(step(a,15,67,dt)){c.returned++;a.phase='idle';a.target=null;if(c.returned>=legendaryNeed()&&!c.claimed){c.claimed=true;const amount=Math.round(80*(1+state.bag*.35)*(1+state.area*.4));const gained=depositSugar(Math.round(amount*queenBonus()));state.total+=gained;state.trips+=3;checkHatch();state.legendaryCollected++;pop('+'+gained+' 👑',19,64);toast('🎉 جمعت الحلوى الأسطورية!');c.node.remove();legendary=null;unlock();drawUI();save();}}}
+else if(a.phase==='intercept'&&a.target){if(!enemy||a.target!==enemy){a.phase='idle';a.target=null}else if(step(a,enemy.x,enemy.y,dt)){enemy.node.remove();enemy=null;a.target=null;a.phase='idle';state.enemiesDefeated++;toast('🛡️ الحارس طرد الحشرة!');drawUI();save();}}
+drawAnt(a)}
+if(enemy){if(state.counts.guard>0&&!ants.some(a=>a.phase==='intercept'))sendGuard();const target=candies.find(c=>c.stock&&!c.busy);if(target){let dx=target.x-enemy.x,dy=target.y-enemy.y,d=Math.hypot(dx,dy),length=(6+state.area)*enemySlow()*dt;if(d<=length){const loss=Math.min(state.sugar,Math.ceil((9+state.area*3)*(1-guardDefense())));state.sugar-=loss;target.stock=false;target.respawn=3;target.node.classList.add('taken');pop('-'+loss+' 🍬',enemy.x,enemy.y);toast('🐞 الحشرة أخذت سكر!');enemy.node.remove();enemy=null;drawUI();save();}else{enemy.x+=dx/d*length;enemy.y+=dy/d*length;enemy.node.style.left=enemy.x+'%';enemy.node.style.top=enemy.y+'%'}}}
+if(lastSave>6){lastSave=0;save()}requestAnimationFrame(frame)}
+syncAnts();buildCandy();renderAreaDecor();drawUI();requestAnimationFrame(frame);
+window.AntGame={state:()=>({...state,visibleAnts:ants.length,legendaryVisible:!!legendary,enemyVisible:!!enemy}),tap:i=>send(candies[i]),tapLegendary:()=>legendary&&send(legendary),grant:n=>{const gain=depositSugar(n);state.total+=gain;unlock();drawUI();save()},spawnLegend:()=>{state.nextLegendary=0;spawnLegend()},spawnEnemy:()=>{state.unlocked=Math.max(state.unlocked,1);state.nextEnemy=0;spawnEnemy()},nestUpgrade:id=>{const b=document.querySelector('[data-nest="'+id+'"]');if(!b)return false;b.click();return state.nest[id]},nestInfo:()=>({levels:{...state.nest},capacity:sugarCapacity(),maxAnts:maxAnts(),hatchTrips:hatchTrips(),discount:hireDiscount(),defense:guardDefense()})};
+})();
+</script></body></html>
