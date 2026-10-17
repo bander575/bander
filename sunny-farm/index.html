@@ -35,13 +35,19 @@
 const $=id=>document.getElementById(id), canvas=$('game'), ctx=canvas.getContext('2d',{alpha:false});
 const W=106,H=54,MAP=16, SAVE_KEY='sunny_farm_valley_v3';let sw=0,sh=0,dpr=1,zoom=1,panX=0,panY=0,tick=0,frame=0;
 const CROPS={wheat:{name:'قمح ذهبي',icon:'🌾',color:'#f5ca51',time:13000,cost:2,yield:4,xp:5,level:1,sell:5},corn:{name:'ذرة حلوة',icon:'🌽',color:'#e6d854',time:26000,cost:3,yield:4,xp:8,level:2,sell:7},carrot:{name:'جزر طازج',icon:'🥕',color:'#f28b3e',time:38000,cost:4,yield:4,xp:11,level:3,sell:9},sugar:{name:'قصب السكر',icon:'🎋',color:'#8cde69',time:58000,cost:6,yield:4,xp:15,level:4,sell:12},strawberry:{name:'فراولة',icon:'🍓',color:'#f65c62',time:75000,cost:8,yield:3,xp:19,level:5,sell:18},pumpkin:{name:'يقطين',icon:'🎃',color:'#f9ab3b',time:100000,cost:11,yield:3,xp:25,level:6,sell:25}};
-const GOODS={...CROPS,egg:{name:'بيض طازج',icon:'🥚',sell:16},milk:{name:'حليب',icon:'🥛',sell:22},bread:{name:'خبز طازج',icon:'🍞',sell:35},cheese:{name:'جبن',icon:'🧀',sell:52},feed:{name:'علف',icon:'🌿',sell:15},syrup:{name:'شراب السكر',icon:'🍯',sell:70},jam:{name:'مربى',icon:'🫙',sell:92}};
+const GOODS={...CROPS,egg:{name:'بيض طازج',icon:'🥚',sell:16},milk:{name:'حليب',icon:'🥛',sell:22},wool:{name:'صوف ناعم',icon:'🧶',sell:36},bread:{name:'خبز طازج',icon:'🍞',sell:35},cheese:{name:'جبن',icon:'🧀',sell:52},feed:{name:'علف',icon:'🌿',sell:15},syrup:{name:'شراب السكر',icon:'🍯',sell:70},jam:{name:'مربى',icon:'🫙',sell:92}};
 const FAC={bakery:{name:'المخبز الدافئ',icon:'🥐',lvl:1,recipes:[{item:'bread',ingredients:{wheat:3},ms:24000,xp:16}]},mill:{name:'مطحنة العلف',icon:'🌾',lvl:1,recipes:[{item:'feed',qty:3,ingredients:{wheat:2,corn:1},ms:19000,xp:12}]},dairy:{name:'معمل الألبان',icon:'🧀',lvl:3,recipes:[{item:'cheese',ingredients:{milk:2,corn:1},ms:47000,xp:26}]},sugarmill:{name:'معمل الحلويات',icon:'🍯',lvl:4,recipes:[{item:'syrup',ingredients:{sugar:3},ms:55000,xp:35},{item:'jam',ingredients:{strawberry:3,sugar:1},ms:80000,xp:45,level:5}]}};
+const ANIMALS={
+chicken:{name:'حظيرة الدجاج',icon:'🐔',lvl:1,item:'egg',qty:2,ms:30000,xp:8,req:{wheat:2},x:2,y:8,desc:'الدجاج يحب الحبوب ويعطيك بيضًا طازجًا'},
+cow:{name:'مرعى الأبقار',icon:'🐄',lvl:2,item:'milk',qty:2,ms:49000,xp:13,req:{corn:3},x:10,y:7,desc:'أطعم الأبقار الذرة واجمع الحليب'},
+sheep:{name:'مرعى الأغنام',icon:'🐑',lvl:3,item:'wool',qty:2,ms:64000,xp:18,req:{wheat:2,feed:1},x:13,y:8,desc:'الأغنام تنتج الصوف لتبيعه في السوق'}
+};
 const STATIC=[
  {x:3,y:2,type:'house',name:'بيت المزرعة',span:2},
  {x:8,y:2,type:'barn',name:'الحظيرة الكبيرة',span:2},
  {x:2,y:8,type:'chicken',name:'حظيرة الدجاج',span:2},
  {x:10,y:7,type:'cow',name:'مرعى الأبقار',span:2},
+ {x:13,y:8,type:'sheep',name:'مرعى الأغنام',span:1.4},
  {x:6,y:10,type:'bakery',name:'المخبز',span:2},
  {x:11,y:10,type:'dairy',name:'معمل الألبان',span:2},
  {x:2,y:12,type:'mill',name:'مطحنة العلف',span:2},
@@ -52,15 +58,15 @@ const STATIC=[
  {x:12,y:13,type:'truck',name:'لوحة الطلبات'}
 ];
 const PLOT_POS=[[5,4],[6,4],[7,4],[5,5],[6,5],[7,5],[5,6],[6,6],[7,6],[4,4],[4,5],[4,6],[8,5],[8,6],[6,7],[7,7],[8,7],[5,7],[9,5],[10,4],[4,7],[3,6],[3,5],[6,8]];
-function fresh(){return {coins:650,gems:20,level:2,xp:4,inventory:{wheat:8,corn:5,egg:2,feed:3,milk:0},plots:PLOT_POS.slice(0,9).map(([x,y],i)=>({x,y,crop:[1,2,6].includes(i)?'wheat':i===4?'corn':null,at:i===1?Date.now()-16000:i===2?Date.now()-7000:i===4?Date.now()-13000:i===6?Date.now()-3500:0})),animals:{chicken:{ready:true,end:0},cow:{ready:false,end:0}},factories:{bakery:null,mill:null,dairy:null,sugarmill:null},orders:[],stats:{harvest:0,eggs:0,orders:0},questsClaimed:{},decors:[],land:0,music:false,weather:false};}
+function fresh(){return {coins:650,gems:20,level:2,xp:4,inventory:{wheat:8,corn:5,egg:2,feed:3,milk:0,wool:0},plots:PLOT_POS.slice(0,9).map(([x,y],i)=>({x,y,crop:[1,2,6].includes(i)?'wheat':i===4?'corn':null,at:i===1?Date.now()-16000:i===2?Date.now()-7000:i===4?Date.now()-13000:i===6?Date.now()-3500:0})),animals:{chicken:{ready:true,end:0},cow:{ready:false,end:0},sheep:{ready:false,end:0}},factories:{bakery:null,mill:null,dairy:null,sugarmill:null},orders:[],stats:{harvest:0,eggs:0,wool:0,orders:0},questsClaimed:{},decors:[],land:0,music:false,weather:false};}
 let s=fresh();try{let d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&typeof d.coins==='number'&&d.plots&&d.inventory){s={...fresh(),...d,animals:{...fresh().animals,...d.animals},factories:{...fresh().factories,...d.factories},stats:{...fresh().stats,...d.stats},questsClaimed:d.questsClaimed||{},decors:d.decors||[]};}}catch(e){}
-const questDefs=[{key:'harvest',name:'موسم حصاد سعيد',desc:'احصد ٨ مرات من حقولك',icon:'🌾',target:8,reward:115,xp:22},{key:'eggs',name:'فطور أهل القرية',desc:'اجمع ٤ بيضات من الدجاج',icon:'🥚',target:4,reward:135,xp:24},{key:'orders',name:'تاجر القرية',desc:'سلّم طلبين للشاحنة',icon:'🚚',target:2,reward:170,xp:30}];
+const questDefs=[{key:'harvest',name:'موسم حصاد سعيد',desc:'احصد ٨ مرات من حقولك',icon:'🌾',target:8,reward:115,xp:22},{key:'eggs',name:'فطور أهل القرية',desc:'اجمع ٤ بيضات من الدجاج',icon:'🥚',target:4,reward:135,xp:24},{key:'wool',name:'صوف الأغنام',desc:'اجمع ٤ قطع صوف من أغنامك',icon:'🧶',target:4,reward:190,xp:32},{key:'orders',name:'تاجر القرية',desc:'سلّم طلبين للشاحنة',icon:'🚚',target:2,reward:170,xp:30}];
 const rnd=(a,b)=>{let n=Math.sin(a*127.1+b*311.7)*43758.5453;return n-Math.floor(n);};
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){}};
 function lvlGoal(l){return 26+l*23;}function inv(item){return s.inventory[item]||0;}function add(item,n){s.inventory[item]=Math.max(0,inv(item)+n);}function money(n){s.coins=Math.max(0,s.coins+n);updateHUD();}
 function grantXP(n){s.xp+=n;let gained=0;while(s.xp>=lvlGoal(s.level)){s.xp-=lvlGoal(s.level);s.level++;s.coins+=70+s.level*20;gained++;}if(gained){toast('🎉 وصلت للمستوى '+s.level+'! فتحنا لك أشياء جديدة');bursts(sw*.5,sh*.33,'#ffd350',35);}updateHUD();save();}
 function updateHUD(){$('coinText').textContent=s.coins.toLocaleString('ar-SA');$('gemText').textContent=s.gems;$('levelText').textContent='المستوى '+s.level;$('levelFill').style.width=Math.min(100,100*s.xp/lvlGoal(s.level))+'%';$('questBadge').textContent=questDefs.filter(q=>!s.questsClaimed[q.key]).length;}
-function spawnOrder(i){const allowed=['wheat','corn','egg','bread','feed',...(s.level>=3?['carrot','milk']:[]),...(s.level>=4?['sugar','cheese']:[]),...(s.level>=5?['strawberry']:[])];const j=Math.floor(rnd(Date.now()%999999+i*31,i+3)*allowed.length);const item=allowed[j];let q=(item==='wheat'||item==='corn'?4+Math.floor(rnd(i,Date.now()%300)*3):item==='egg'?2: item==='feed'?2:1);return {id:Date.now()+i*33,item,qty:q,coins:Math.round(q*(GOODS[item].sell||10)*1.85+20),xp:12+q*4};}
+function spawnOrder(i){const allowed=['wheat','corn','egg','bread','feed',...(s.level>=3?['carrot','milk','wool']:[]),...(s.level>=4?['sugar','cheese']:[]),...(s.level>=5?['strawberry']:[])];const j=Math.floor(rnd(Date.now()%999999+i*31,i+3)*allowed.length);const item=allowed[j];let q=(item==='wheat'||item==='corn'?4+Math.floor(rnd(i,Date.now()%300)*3):item==='egg'?2: item==='feed'?2:1);return {id:Date.now()+i*33,item,qty:q,coins:Math.round(q*(GOODS[item].sell||10)*1.85+20),xp:12+q*4};}
 if(!s.orders?.length){s.orders=[{id:1,item:'wheat',qty:5,coins:63,xp:14},{id:2,item:'egg',qty:2,coins:86,xp:18},{id:3,item:'corn',qty:4,coins:75,xp:17}];}
 let pointer=null,moving=false,activeSheet='',selectedPlot=null,placeMode=null,toastTimer=null,particles=[],floatings=[],truckAnim=0,weatherShift=0,weatherOn=false;
 function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400)}
@@ -78,9 +84,33 @@ function pickSeed(plot){selectedPlot=plot;let html='<div class="field-note">اخ
 function plant(plot,k){const c=CROPS[k];if(!c||s.level<c.level||s.coins<c.cost){toast('🪙 تحتاج عملات أو مستوى أعلى');return}plot.crop=k;plot.at=Date.now();money(-c.cost);bursts(...posOf(plot.x,plot.y),'#d5f797',8);floatText(plot.x,plot.y,'🌱 زراعة!');closeSheet();updateHUD();save();}
 function harvest(plot){const c=CROPS[plot.crop];if(Date.now()-plot.at<c.time){showCrop(plot);return}add(plot.crop,c.yield);s.stats.harvest++;grantXP(c.xp);floatText(plot.x,plot.y,'+'+c.yield+' '+c.icon);bursts(...posOf(plot.x,plot.y),c.color,16);plot.crop=null;plot.at=0;toast('✨ حصاد رائع! +'+c.yield+' '+c.name);save();}
 function showCrop(plot){let c=CROPS[plot.crop],remaining=Math.max(0,c.time-(Date.now()-plot.at)),ready=remaining===0;let body=`<div style="text-align:center;font-size:67px;margin:12px">${c.icon}</div><div style="text-align:center;font-size:16px;font-weight:1000">${ready?'محصولك جاهز للحصاد!':'محصولك ينمو الآن...'}</div>${progressBar(100-100*remaining/c.time)}<div class="field-note">${ready?'احصد الآن واحصل على '+c.yield+' محاصيل.':'متبقي '+Math.ceil(remaining/1000)+' ثانية · تستطيع إكمال أعمال المزرعة والعودة لاحقًا.'}</div><button class="green-btn big-action" id="cropAction">${ready?'🌾 احصد المحصول':'✨ أسرع النمو (💎 1)'}</button>`;openSheet(c.icon+' '+c.name,'من حقل مزرعتك',body);$('cropAction').onclick=()=>{if(ready){harvest(plot);closeSheet();}else if(s.gems>0){s.gems--;plot.at=Date.now()-c.time;updateHUD();save();showCrop(plot)}else toast('💎 ما عندك جواهر كافية')};}
-function animalSheet(key){let a=s.animals[key],ch=key==='chicken',req=ch?{wheat:2}:{corn:3},item=ch?'egg':'milk',name=ch?'دجاجات المزرعة':'أبقار المزرعة',produced=ch?2:2,ms=ch?30000:49000;let ready=a.ready||(a.end&&Date.now()>=a.end);if(ready){a.ready=true;a.end=0;save()}let html=`<div style="text-align:center;font-size:72px;margin:7px">${ch?'🐓 🐔':'🐄 🐮'}</div><div class="field-note">${ready?'💚 حيواناتك مبسوطة ومنتجاتها جاهزة للجمع!':a.end?'⏱️ الحيوانات تأكل الآن وتستعد للإنتاج.':'🌿 أطعم الحيوانات حتى تنتج لك منتجات طازجة.'}</div>`;
-if(a.end&&!ready){html+=progressBar(100-100*(a.end-Date.now())/ms)+`<p style="text-align:center;font-size:12px">متبقي ${Math.ceil((a.end-Date.now())/1000)} ثانية</p>`;}else if(ready){html+=`<button class="green-btn big-action" id="animalAction">${itemIcon(item)} اجمع ${produced} ${GOODS[item].name}</button>`;}else{html+=`<p class="section-title">المطلوب للتغذية</p><p>${missingText(req)}</p><button class="green-btn big-action" ${!afford(req)?'disabled':''} id="animalAction">🌿 أطعم الحيوانات</button>`;}openSheet((ch?'🐔 ':'🐮 ')+name,'من أجمل أركان المزرعة',html);
-let b=$('animalAction');if(b)b.onclick=()=>{if(ready){add(item,produced);a.ready=false;a.end=0;if(ch)s.stats.eggs+=produced;grantXP(ch?8:13);bursts(...posOf(ch?2:10,ch?8:7),'#ffe59c',18);toast('🎉 جمعت '+produced+' '+GOODS[item].name);}else if(afford(req)){Object.entries(req).forEach(([k,n])=>add(k,-n));a.end=Date.now()+ms;a.ready=false;toast('💚 الحيوانات تأكل بسعادة!')}save();animalSheet(key)};}
+function animalSheet(key){
+ const c=ANIMALS[key],a=s.animals[key];if(!c||!a)return;
+ if(s.level<c.lvl){openSheet('🔒 '+c.name,'حيوانات جديدة تفتح مع تقدمك',`<div style="font-size:70px;text-align:center;margin:12px">🐑</div><div class="field-note">مرعى الأغنام يفتح عند المستوى ${c.lvl}. احصد محاصيلك ولبِّ طلبات الشاحنة لتجمع الخبرة!</div>`);return;}
+ const ready=!!(a.ready||(a.end&&Date.now()>=a.end));
+ if(ready&&a.end){a.ready=true;a.end=0;save();}
+ const busy=!!(a.end&&!ready),seconds=Math.ceil(Math.max(0,(a.end||0)-Date.now())/1000);
+ let html=`<div style="text-align:center;font-size:68px;margin:8px">${c.icon}</div><div class="field-note">${c.desc}</div><div style="text-align:center;font-weight:1000;font-size:16px;margin:12px">${ready?'✨ المنتج جاهز للاستلام!':busy?'⏳ الحيوانات تتغذى وتنتج الآن':'🌿 حيواناتك تنتظر وجبتها!'}</div>`;
+ if(busy){html+=progressBar(100-100*seconds*1000/c.ms)+`<p style="text-align:center;font-weight:900">متبقي ${seconds} ثانية</p>`;}
+ else if(ready){html+=`<button class="green-btn big-action" id="animalAction">${GOODS[c.item].icon} اجمع ${c.qty} ${GOODS[c.item].name}</button>`;}
+ else {html+=`<p class="section-title">🌿 الطعام المطلوب</p><div class="field-note">${missingText(c.req)}</div><button class="green-btn big-action" id="animalAction" ${!afford(c.req)?'disabled':''}>🌾 أطعم الحيوانات</button>`;}
+ openSheet(c.icon+' '+c.name,'مرحلة الحيوانات • تغذية وإنتاج',html);
+ const action=$('animalAction');
+ if(action)action.onclick=()=>{
+   if(ready){
+     add(c.item,c.qty);a.ready=false;a.end=0;
+     if(key==='chicken')s.stats.eggs+=c.qty;
+     if(key==='sheep')s.stats.wool=(s.stats.wool||0)+c.qty;
+     grantXP(c.xp);bursts(...posOf(c.x,c.y),'#ffe3a4',24);
+     floatText(c.x,c.y,'+'+c.qty+' '+GOODS[c.item].icon);
+     toast('🎉 جمعت '+c.qty+' '+GOODS[c.item].name);
+   } else if(!a.end&&afford(c.req)){
+     Object.entries(c.req).forEach(([item,n])=>add(item,-n));
+     a.end=Date.now()+c.ms;a.ready=false;toast('💚 بدأ إنتاج '+GOODS[c.item].name+'!');
+   }
+   save();animalSheet(key);
+ };
+}
 function factorySheet(k){let f=FAC[k];if(s.level<f.lvl){return openSheet('🔒 '+f.name,'المبنى يحتاج تطوير المزرعة',`<div class="empty" style="font-size:40px">🏗️</div><div class="field-note">افتح ${f.name} عند الوصول إلى المستوى ${f.lvl}. اجمع الخبرة من الزراعة والطلبات!</div>`)}let task=s.factories[k];let done=task&&Date.now()>=task.end;let html=`<div class="field-note">${task?done?'✨ تم تجهيز المنتج! اضغط لاستلامه.':'🔥 المصنع يعمل الآن... يمكنك متابعة المزرعة.':'اختر منتجًا لصناعته من محاصيل مزرعتك.'}</div>`;
 if(task){let good=GOODS[task.item],r=f.recipes.find(r=>r.item===task.item);html+=`<div class="list-card"><div class="list-icon">${good.icon}</div><div class="list-body"><div class="list-title">${good.name} × ${task.qty}</div><div class="list-desc">${done?'جاهز للاستلام!':'باقي '+Math.ceil((task.end-Date.now())/1000)+' ثانية'}</div>${progressBar(done?100:100-(task.end-Date.now())/r.ms)}</div></div><br><button id="factoryTake" class="${done?'green-btn':'muted-btn'} big-action" ${!done?'disabled':''}>${done?'📦 استلم المنتج':'⏳ جاري الإنتاج'}</button>`;}else{html+='<div class="stack">';for(let r of f.recipes){let lock=s.level<(r.level||1);html+=`<div class="list-card"><div class="list-icon">${itemIcon(r.item)}</div><div class="list-body"><div class="list-title">${GOODS[r.item].name} × ${r.qty||1}</div><div class="list-desc">${missingText(r.ingredients)}<br>⏱️ ${Math.round(r.ms/1000)} ثانية</div></div><button class="${lock?'muted-btn':'orange-btn'}" data-craft="${r.item}" ${lock||!afford(r.ingredients)?'disabled':''}>${lock?'🔒':'اصنع'}</button></div>`;}html+='</div>';}openSheet(f.icon+' '+f.name,'الإنتاج والتصنيع',html);
 if(task&&done){$('factoryTake').onclick=()=>{add(task.item,task.qty);s.factories[k]=null;grantXP(f.recipes.find(r=>r.item===task.item).xp);toast('📦 استلمت '+GOODS[task.item].name);bursts(...posOf((STATIC.find(o=>o.type===k)||{x:6}).x,(STATIC.find(o=>o.type===k)||{y:10}).y),'#ffe36b',19);save();factorySheet(k)}}
@@ -91,7 +121,17 @@ openSheet('🛒 دكان القرية','بيع، تطوير، وتجارة',html
 function plotPrice(){return 100+Math.max(0,s.plots.length-9)*55;}
 function buyPlot(){if(s.plots.length>=PLOT_POS.length){toast('🌾 فتحت كل الحقول!');return}let cost=plotPrice();if(s.coins<cost){toast('🪙 تحتاج '+cost+' عملة لشراء الحقل');return}money(-cost);let [x,y]=PLOT_POS[s.plots.length];s.plots.push({x,y,crop:null,at:0});grantXP(7);floatText(x,y,'🌱 حقل جديد!');save();toast('✨ فتحت حقل جديد!');marketSheet();}
 function plantsSheet(){let total=s.plots.length;let html=`<div class="field-note">🌾 عندك ${total} حقول · ${s.plots.filter(p=>p.crop&&Date.now()-p.at>=CROPS[p.crop].time).length} جاهزة للحصاد. اضغط على حقل التراب في المزرعة لتزرع.</div><div class="card-grid">`;for(let [k,c]of Object.entries(CROPS)){html+=`<div class="item-card"><div class="card-icon">${c.icon}</div><div class="card-name">${c.name}</div><div class="card-desc">${c.level>s.level?'🔒 يفتح بمستوى '+c.level:'متاح للزراعة'} · ⏱️ ${c.time/1000} ث</div><div class="pill-row"><span class="mini-pill">📦 ${inv(k)}</span><span class="mini-pill">🪙 ${c.sell} / وحدة</span></div></div>`;}html+='</div><br><button class="green-btn big-action" id="newField">🌱 أضف حقلًا · 🪙 '+plotPrice()+'</button>';openSheet('🌾 الزراعة والحصاد','ازرع وشاهد مزرعتك تكبر',html);$('newField').onclick=()=>{buyPlot();plantsSheet()};}
-function animalsOverview(){let html='<div class="stack">';for(let k of ['chicken','cow']){let a=s.animals[k],ready=a.ready||(a.end&&a.end<=Date.now());html+=`<div class="list-card"><div class="list-icon">${k==='chicken'?'🐔':'🐄'}</div><div class="list-body"><div class="list-title">${k==='chicken'?'حظيرة الدجاج':'مرعى الأبقار'}</div><div class="list-desc">${ready?'💚 المنتجات جاهزة للجمع':a.end?'⏱️ الإنتاج جارٍ':'🌿 بحاجة إلى تغذية'}</div></div><button class="green-btn" data-animal="${k}">زيارة</button></div>`;}html+='</div>';openSheet('🐮 حيوانات المزرعة','اهتم بها لتحصل على منتجات طازجة',html);document.querySelectorAll('[data-animal]').forEach(b=>b.onclick=()=>animalSheet(b.dataset.animal));}
+function animalsOverview(){
+ let html='<div class="field-note">🐔🐄🐑 اضغط على الحظيرة للتغذية وجمع البيض والحليب والصوف. ستكمل الحيوانات الإنتاج حتى بعد إغلاق Safari.</div><div class="stack">';
+ for(const [k,c]of Object.entries(ANIMALS)){
+  const a=s.animals[k],locked=s.level<c.lvl,ready=a.ready||(a.end&&a.end<=Date.now()),busy=a.end&&!ready;
+  const detail=locked?'🔒 يفتح عند المستوى '+c.lvl:ready?'✨ المنتج جاهز للجمع':busy?'⏳ باقي '+Math.ceil((a.end-Date.now())/1000)+' ثانية':'🌿 تحتاج تغذية';
+  html+=`<div class="list-card"><div class="list-icon">${c.icon}</div><div class="list-body"><div class="list-title">${c.name}</div><div class="list-desc">${detail} · ${GOODS[c.item].icon} × ${c.qty}</div></div><button class="${locked?'muted-btn':'green-btn'}" data-animal="${k}">${locked?'🔒':'زيارة'}</button></div>`;
+ }
+ html+='</div>';
+ openSheet('🐮 حيوانات المزرعة','الإنتاج اليومي في مزرعتك',html);
+ document.querySelectorAll('[data-animal]').forEach(b=>b.onclick=()=>animalSheet(b.dataset.animal));
+}
 function factoriesOverview(){let html='<div class="stack">';for(let [k,f] of Object.entries(FAC)){let busy=s.factories[k],locked=s.level<f.lvl;html+=`<div class="list-card"><div class="list-icon">${f.icon}</div><div class="list-body"><div class="list-title">${f.name}</div><div class="list-desc">${locked?'🔒 يفتح بالمستوى '+f.lvl:busy?(Date.now()>=busy.end?'✨ المنتج جاهز':'🔥 يعمل حاليًا'):'جاهز لصنع منتجات رائعة'}</div></div><button class="${locked?'muted-btn':'green-btn'}" data-factory="${k}">${locked?'🔒':'دخول'}</button></div>`;}html+='</div>';openSheet('🏭 المصانع والإنتاج','حوّل المحاصيل إلى منتجات أغلى',html);document.querySelectorAll('[data-factory]').forEach(b=>b.onclick=()=>factorySheet(b.dataset.factory));}
 function questSheet(){let html='<div class="stack">';for(let q of questDefs){let v=s.stats[q.key]||0,done=v>=q.target,claimed=!!s.questsClaimed[q.key];html+=`<div class="list-card"><div class="list-icon">${q.icon}</div><div class="list-body"><div class="list-title">${q.name}</div><div class="list-desc">${q.desc} · ${Math.min(v,q.target)}/${q.target}</div>${progressBar(v/q.target*100)}<div style="font-size:11px;color:#9a6a38;font-weight:900">🪙 ${q.reward} + ⭐ ${q.xp}</div></div><button class="${done&&!claimed?'green-btn':'muted-btn'}" ${!done||claimed?'disabled':''} data-claim="${q.key}">${claimed?'✓ تم':done?'استلم':'قريبًا'}</button></div>`;}html+='</div>';openSheet('📜 لوحة الإنجازات','أنجز التحديات واربح المكافآت',html);document.querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>{let q=questDefs.find(x=>x.key===b.dataset.claim);if(!q||s.questsClaimed[q.key]||s.stats[q.key]<q.target)return;s.questsClaimed[q.key]=true;money(q.reward);grantXP(q.xp);toast('🏆 استلمت مكافأة '+q.name);save();questSheet()});}
 function landSheet(){let price=250+s.land*300,html=`<div style="text-align:center;font-size:65px;margin:4px">🏞️</div><div class="field-note">وسّع أراضي المزرعة للجهة الخضراء، وأضف ديكورات وتطويرات. توسعت ${s.land} مرة.</div><div class="list-card"><div class="list-icon">🪙</div><div class="list-body"><div class="list-title">افتح قطعة أرض خضراء</div><div class="list-desc">تفتح منطقة ذات أشجار وزهور جديدة</div></div><button id="landBuy" class="green-btn" ${s.land>=4?'disabled':''}>${s.land>=4?'مكتملة':price+' 🪙'}</button></div>`;openSheet('🗺️ توسعة المزرعة','أرض أكبر، فرص أجمل',html);$('landBuy').onclick=()=>{if(s.coins<price){toast('🪙 ما عندك عملات كفاية');return}if(s.land>=4)return;money(-price);s.land++;grantXP(35);bursts(sw*.5,sh*.4,'#b9f76b',28);toast('🏞️ فتحت أرضًا جديدة!');save();landSheet()};}
@@ -169,6 +209,35 @@ function butterfly(x,y,s=1){ctx.save();ctx.translate(x,y+Math.sin(tick*2.9+x)*8)
 function cowOne(x,y,s=1){ctx.save();ctx.translate(x,y+Math.sin(tick*2)*.9);ctx.scale(s,s);oval(0,10,31,9,'#244e2950');for(let xx of [-18,-3,15,26]){roundRect(xx,0,6,16,2,'#f8e4c5','#a38569',1);oval(xx+2,15,4,2,'#695047')}
 oval(1,-5,32,19,'#fff1d9','#987c66',1.9);oval(-15,-12,11,8,'#6d554b');oval(16,0,7,8,'#765a51');line(-28,-5,-38,-17,'#8c775c',2);oval(29,-15,15,13,'#fff3df','#9a8168',1.4);oval(29,-10,11,8,'#f3b1ae','#c68485',1);oval(24,-10,1.9,2,'#a76c67');oval(34,-10,1.9,2,'#a76c67');oval(26,-21,2,2,'#4b4034');oval(37,-21,2,2,'#4b4034');poly([[20,-25],[17,-33],[25,-29]],'#f2d9b2','#b39673',1);poly([[38,-26],[44,-34],[44,-23]],'#f2d9b2','#b39673',1);ctx.restore()}
 function cowBarn(){drop(63,23);fence(-52,10,1);fence(52,-2,.9);poly([[-37,-38],[0,-21],[0,9],[-37,-7]],'#e9b977','#a37b4f',2);poly([[0,-21],[39,-38],[39,-6],[0,9]],'#e4ca94','#9e724a',2);poly([[-47,-41],[-4,-76],[48,-41],[3,-18]],'#85bb79','#587e55',2.5);poly([[3,-18],[48,-41],[48,-32],[3,-9]],'#608e59');poly([[-20,-22],[-2,-14],[-2,7],[-20,0]],'#836247','#e9c897',2);cowOne(-30,26,.65);cowOne(37,17,.74);bush(-55,-5,.5)}
+function sheepOne(x,y,scale=1,phase=0){
+ ctx.save();const bounce=Math.sin(tick*2.4+phase)*1.7;ctx.translate(x+Math.sin(tick*.5+phase)*2,y+bounce);ctx.scale(scale,scale);
+ oval(0,9,30,9,'#28582f53');
+ for(let dx of [-16,-5,13,23]){roundRect(dx,0,7,16,3,'#6c5147','#553a35',.8);oval(dx+3,15,4,2,'#49362d');}
+ for(let [dx,dy,rr] of [[-18,-17,11],[-2,-22,13],[15,-19,12],[-24,-5,12],[-7,-8,14],[15,-7,12],[1,1,12]]){oval(dx,dy,rr,rr*.94,gradient(dx,dy,rr,'#fffef2','#d6cfb9'),'#bbb09b',1);}
+ oval(26,-15,14,12,'#8c6856','#694d42',1.3);oval(15,-21,7,4,'#806352');oval(37,-22,7,4,'#806352');
+ oval(30,-19,2.6,2.6,'#272f2a');oval(39,-17,2.5,2.5,'#272f2a');oval(36,-9,6,3,'#b7817e');
+ oval(2,-29,12,6,'#fffbed','#dbd1bc',1);ctx.restore();
+}
+function sheepPen(){
+ drop(57,18);oval(0,3,60,20,'#73b25a','#569544',1.5);
+ for(let [x,y,scale] of [[-45,10,.8],[47,9,.8],[-25,19,.8],[27,20,.8]])fence(x,y,scale);
+ poly([[-43,-28],[-13,-42],[17,-29],[17,-4],[-43,8]],'#eecda0','#a87849',1.7);
+ poly([[-54,-30],[-11,-60],[29,-39],[-1,-12]],'#dc8e5d','#a96745',2.5);
+ poly([[-54,-30],[-1,-12],[-1,-6],[-54,-24]],'#bc6f46','#955536',1.3);
+ oval(-26,-5,8,11,'#6c4c37','#f2d8a3',1.6);
+ woodenCrate(48,-1,.56);
+ sheepOne(-34,24,.67,0);sheepOne(15,24,.75,1.9);sheepOne(48,16,.5,3.2);
+ flower(-52,21,.7,'#ffcaed');flower(52,22,.8,'#fff4a9');
+}
+function animalBubble(key){
+ const c=ANIMALS[key],a=s.animals[key];if(!a)return;
+ const locked=s.level<c.lvl,ready=!locked&&(a.ready||(a.end&&a.end<=Date.now())),busy=!locked&&a.end&&!ready;
+ const bob=Math.sin(tick*2.8+c.x)*3;
+ ctx.save();ctx.translate(0,-104+bob);
+ oval(0,0,17,17,ready?'#fff1ae':locked?'#d4c8ac':'#fff8dc',ready?'#eeaa43':'#bf9762',2);
+ txt(locked?'🔒':ready?GOODS[c.item].icon:busy?'⏳':'🌿',0,0,16,'#6d4728',null,0);
+ ctx.restore();
+}
 function factoryBase(color1,color2,roofCol,icon='✿',factory='bakery'){drop(63,17);poly([[-45,-39],[1,-19],[1,23],[-45,2]],color1,'#94654a',2);poly([[1,-19],[49,-42],[49,3],[1,23]],color2,'#916448',2);for(let j=0;j<3;j++){line(-42,-31+j*13,-1,-12+j*13,'#fff7e344',1.4);line(4,-12+j*13,45,-31+j*13,'#fff7e333',1.3)}
 poly([[-55,-40],[-9,-81],[56,-45],[5,-17]],roofCol,'#996651',2.5);poly([[-55,-40],[5,-17],[5,-6],[-55,-29]],shade(roofCol,-21),'#935a40',1.4);poly([[5,-17],[56,-45],[56,-32],[5,-6]],shade(roofCol,14),'#935a40',1.5);
 poly([[-33,-18],[-13,-9],[-13,11],[-33,2]],'#b87a54','#f8e1b4',2);poly([[21,-24],[42,-32],[42,-11],[21,-3]],'#99d3d5','#ffefcf',3);line(30,-28,30,-7,'#fff3dc',2);roundRect(-20,-62,37,21,9,'#fff7cf','#e1b77d',2);txt(icon,-1,-51,14,'#9d6d50',null,0);
@@ -199,8 +268,9 @@ const actors=[];for(let p of s.plots)actors.push({x:p.x,y:p.y,t:'plot',data:p});
 // intentional little living props
 actors.push({x:4.7+Math.sin(tick*.2)*.35,y:7.8+Math.sin(tick*.27)*.3,t:'farmer',seed:1},{x:10,y:1,t:'tree',seed:3},{x:1,y:11,t:'tree',seed:4},{x:14,y:9,t:'tree',seed:5},{x:1,y:1,t:'tree',seed:6},{x:9,y:12,t:'bush',seed:7},{x:12,y:5,t:'bush',seed:8},{x:4,y:12,t:'bush',seed:9});
 actors.sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x);
-for(let o of actors){let [xx,yy]=proj(o.x,o.y);ctx.save();ctx.translate(xx,yy);if(o.t==='plot')plotArt(o.data);else if(o.t==='house')house();else if(o.t==='barn')barn();else if(o.t==='chicken')coop();else if(o.t==='cow')cowBarn();else if(o.t==='bakery')bakery();else if(o.t==='dairy')dairy();else if(o.t==='mill')mill();else if(o.t==='sugarmill')sugarMill();else if(o.t==='pond')pond();else if(o.t==='orchard')orchard();else if(o.t==='market')marketStall();else if(o.t==='truck')truck();else if(o.t==='decor')decorDraw(o.data);else if(o.t==='farmer')farmer();else if(o.t==='tree')tree(0,0,(.65+o.seed*.35),o.seed>.8);else if(o.t==='bush')bush(0,0,.5+o.seed*.4,o.seed>.7);
-if(['dairy','sugarmill'].includes(o.t)&&s.level<FAC[o.t].lvl){oval(0,-92,17,17,'#f7dc9e','#bb8756',2);txt('🔒',0,-93,17,'white',null,0)}
+for(let o of actors){let [xx,yy]=proj(o.x,o.y);ctx.save();ctx.translate(xx,yy);if(o.t==='plot')plotArt(o.data);else if(o.t==='house')house();else if(o.t==='barn')barn();else if(o.t==='chicken')coop();else if(o.t==='cow')cowBarn();else if(o.t==='sheep')sheepPen();else if(o.t==='bakery')bakery();else if(o.t==='dairy')dairy();else if(o.t==='mill')mill();else if(o.t==='sugarmill')sugarMill();else if(o.t==='pond')pond();else if(o.t==='orchard')orchard();else if(o.t==='market')marketStall();else if(o.t==='truck')truck();else if(o.t==='decor')decorDraw(o.data);else if(o.t==='farmer')farmer();else if(o.t==='tree')tree(0,0,(.65+o.seed*.35),o.seed>.8);else if(o.t==='bush')bush(0,0,.5+o.seed*.4,o.seed>.7);
+if(['chicken','cow','sheep'].includes(o.t))animalBubble(o.t);
+ if(['dairy','sugarmill'].includes(o.t)&&s.level<FAC[o.t].lvl){oval(0,-92,17,17,'#f7dc9e','#bb8756',2);txt('🔒',0,-93,17,'white',null,0)}
 if(['bakery','dairy','mill','sugarmill'].includes(o.t)&&s.factories[o.t]){let t=s.factories[o.t];if(Date.now()>=t.end){oval(0,-122+Math.sin(tick*3)*3,14,14,'#fff9d4','#e8b15a',2);txt('✓',0,-124+Math.sin(tick*3)*3,14,'#55b35b',null,0)}else{for(let i=0;i<3;i++){let a=(tick*.65+i*.9)%2.7;oval(32+Math.sin(i+a)*6,-100-a*19,5+a*2,3+a,'#fffbe6'+(a<1?'b6':'59'))}}}
 ctx.restore();}
 const bugs=[[4.5,3.5],[10.8,5.2],[9.3,12.3],[2.4,4.1]];for(let i=0;i<bugs.length;i++){let p=bugs[i],px=proj(p[0]+Math.sin(tick*.33+i)*.4,p[1]+Math.cos(tick*.37+i)*.35);ctx.save();ctx.translate(px[0],px[1]-45);butterfly(0,0,.85);ctx.restore()}ctx.restore();}
@@ -212,13 +282,13 @@ function floatText(x,y,t){let [xx,yy]=posOf(x,y);floatings.push({x:xx,y:yy,txt:t
 function renderParticles(dt){for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=135*dt;p.life-=dt*1.4;if(p.life<=0){particles.splice(i,1);continue}ctx.globalAlpha=p.life;ctx.save();ctx.translate(p.x,p.y);ctx.rotate((1-p.life)*3);roundRect(-p.s/2,-p.s/2,p.s,p.s,2,p.c);ctx.restore()}ctx.globalAlpha=1;for(let i=floatings.length-1;i>=0;i--){let p=floatings[i];p.y-=22*dt;p.life-=dt*.72;if(p.life<=0){floatings.splice(i,1);continue}ctx.globalAlpha=p.life;txt(p.txt,p.x,p.y,17,'#fffddc','#5b8f3d',3)}ctx.globalAlpha=1;}
 let lastT=performance.now();function animate(t){let dt=Math.min(.06,(t-lastT)/1000);lastT=t;tick+=dt;frame++;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,sw,sh);details();renderWorld();shadeScene();if(weatherOn)rain();renderParticles(dt);if(frame%45===0){for(let a of Object.values(s.animals))if(a.end&&a.end<=Date.now()){a.ready=true;a.end=0;save()}}requestAnimationFrame(animate)}
 function handleTap(sx,sy){let c=cellAt(sx,sy),x=c.x,y=c.y;if(x<0||x>=MAP||y<0||y>=MAP)return; if(placeMode){putDecor(x,y);return;}let p=s.plots.find(p=>p.x===x&&p.y===y);if(p){if(!p.crop)pickSeed(p);else harvest(p);return}
-let candidates=STATIC.filter(o=>Math.abs(o.x-x)<(o.span||1)&&Math.abs(o.y-y)<(o.span||1));let o=candidates.sort((a,b)=>Math.abs(a.x-x)+Math.abs(a.y-y)-Math.abs(b.x-x)-Math.abs(b.y-y))[0];if(o){switch(o.type){case'chicken':animalSheet('chicken');return;case'cow':animalSheet('cow');return;case'bakery':case'mill':case'dairy':case'sugarmill':factorySheet(o.type);return;case'truck':ordersSheet();return;case'market':marketSheet();return;case'house':questSheet();return;case'barn':plantsSheet();return;case'pond':toast('🦆 أجواء هادئة عند بركة البط');return;case'orchard':toast('🍎 قريبًا: أشجار الفاكهة المثمرة');return}}
+let candidates=STATIC.filter(o=>Math.abs(o.x-x)<(o.span||1)&&Math.abs(o.y-y)<(o.span||1));let o=candidates.sort((a,b)=>Math.abs(a.x-x)+Math.abs(a.y-y)-Math.abs(b.x-x)-Math.abs(b.y-y))[0];if(o){switch(o.type){case'chicken':animalSheet('chicken');return;case'cow':animalSheet('cow');return;case'sheep':animalSheet('sheep');return;case'bakery':case'mill':case'dairy':case'sugarmill':factorySheet(o.type);return;case'truck':ordersSheet();return;case'market':marketSheet();return;case'house':questSheet();return;case'barn':plantsSheet();return;case'pond':toast('🦆 أجواء هادئة عند بركة البط');return;case'orchard':toast('🍎 قريبًا: أشجار الفاكهة المثمرة');return}}
 let deco=s.decors.find(o=>o.x===x&&o.y===y);if(deco){toast('🌻 زينة جميلة!');return}
 if(s.plots.length<PLOT_POS.length&&PLOT_POS.slice(s.plots.length).some(p=>p[0]===x&&p[1]===y)){toast('🌱 اضغط على السوق لتشتري حقلًا هنا!');return}
 }
 const pointers=new Map();let tapStart=null;canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){tapStart={x:e.clientX,y:e.clientY,time:Date.now()};moving=false}else tapStart=null});canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;let prev=pointers.get(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){let dx=e.clientX-prev.x,dy=e.clientY-prev.y;panX+=dx;panY+=dy;if(tapStart&&Math.hypot(tapStart.x-e.clientX,tapStart.y-e.clientY)>8)moving=true;}else if(pointers.size===2){let arr=[...pointers.values()],ids=[...pointers.keys()];let other=arr[ids.indexOf(e.pointerId)===0?1:0];let prevDist=Math.hypot(prev.x-other.x,prev.y-other.y);let nextDist=Math.hypot(e.clientX-other.x,e.clientY-other.y);if(prevDist>4)zoom=Math.max(.52,Math.min(1.65,zoom*nextDist/prevDist));moving=true;}panX=Math.max(-950,Math.min(950,panX));panY=Math.max(-720,Math.min(720,panY));});canvas.addEventListener('pointerup',e=>{if(!moving&&tapStart&&pointers.size===1&&Date.now()-tapStart.time<700)handleTap(e.clientX,e.clientY);pointers.delete(e.pointerId);tapStart=null});canvas.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);tapStart=null});canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.52,Math.min(1.65,zoom+(e.deltaY>0?-.07:.07)))},{passive:false});
 weatherOn=s.weather;updateHUD();setTimeout(()=>hints('👆 اضغط على الحقول البنية للزراعة • اسحب لتتجول • قرّب بإصبعين'),3000);requestAnimationFrame(animate);setInterval(save,15000);document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
-window.sunnyFarmDebug={get state(){return s},plant,handleTap,posOf,cellAt,openShop:marketSheet,openOrders:ordersSheet,openFactories:factoriesOverview,render:renderWorld};
+window.sunnyFarmDebug={get state(){return s},plant,handleTap,posOf,cellAt,openShop:marketSheet,openOrders:ordersSheet,openFactories:factoriesOverview,openAnimals:animalsOverview,render:renderWorld};
 })();
 </script>
 </body>
