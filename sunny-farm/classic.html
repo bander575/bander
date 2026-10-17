@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#7ccf74"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>مزرعة الشمس ✨ | Sunny Farm</title>
+<style>
+:root{--brown:#674027;--dark:#49301e;--cream:#fff8e8;--gold:#ffc84d;--green:#4ba65b;--shadow:0 7px 0 #00000016,0 15px 35px #30231925}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color:var(--dark);overscroll-behavior:none;-webkit-user-select:none;user-select:none}body{background:#81c86a}button{font:inherit;cursor:pointer;border:0;touch-action:manipulation}button:active{transform:translateY(2px) scale(.98)}#game{display:block;width:100%;height:100%;touch-action:none;cursor:grab}#game:active{cursor:grabbing}
+#ui{position:absolute;inset:0;pointer-events:none;overflow:hidden}#ui>*{pointer-events:auto}
+.topbar{position:absolute;left:12px;right:12px;top:calc(env(safe-area-inset-top) + 10px);display:flex;align-items:center;justify-content:space-between;gap:8px;z-index:5;direction:ltr}.profile{display:flex;direction:rtl;gap:8px;align-items:center;background:#fff9e9ed;border:2px solid #fff;border-bottom:4px solid #d9b78b;border-radius:24px;padding:5px 9px 5px 12px;min-width:132px;box-shadow:0 3px 13px #375d2455}.avatar{width:39px;height:39px;display:grid;place-items:center;border-radius:13px;background:linear-gradient(150deg,#ffeeb1,#f8b963);font-size:24px;box-shadow:inset 0 -3px #e8a047}.profile-name{font-size:12px;font-weight:900}.level-line{font-size:10px;color:#836343;font-weight:800}.level-track{height:7px;background:#e8d7b9;border-radius:9px;margin-top:4px;overflow:hidden}.level-fill{height:100%;width:0;background:linear-gradient(90deg,#7ce46e,#319f53);border-radius:9px;transition:width .4s}.wallet{display:flex;align-items:center;gap:7px;direction:rtl}.money-pill{display:flex;align-items:center;gap:5px;background:linear-gradient(180deg,#fffef2,#fff0cf);border:2px solid white;border-bottom:4px solid #ddc292;border-radius:24px;padding:6px 11px 6px 7px;box-shadow:0 3px 12px #375d2440;font-size:13px;font-weight:900;white-space:nowrap}.money-pill span{font-size:19px}.money-pill.gems{background:linear-gradient(180deg,#f4ffff,#d9f7fa);border-bottom-color:#9ecbd7}.plus{display:grid;place-items:center;background:#5bc867;color:white;border-radius:50%;height:21px;width:21px;font-size:16px;box-shadow:inset 0 -3px #319448}
+.logo{position:absolute;top:calc(env(safe-area-inset-top) + 80px);left:50%;transform:translateX(-50%);pointer-events:none;text-align:center;filter:drop-shadow(0 3px 2px #3a68294f);white-space:nowrap}.logo-title{font-size:29px;font-weight:1000;line-height:1;color:#fffdf3;text-shadow:0 3px #aa683c,2px 0 #aa683c,-2px 0 #aa683c,0 -2px #aa683c,0 6px 12px #23392240;letter-spacing:-1px}.logo-sub{margin-top:4px;font-size:11px;color:#fffde6;text-shadow:0 2px 4px #283c2b;font-weight:900;letter-spacing:2px}.weather{position:absolute;left:13px;top:calc(env(safe-area-inset-top) + 154px);background:#fff9eddf;color:#875830;padding:8px 10px;border:2px solid white;border-radius:18px;box-shadow:0 4px 10px #32541e30;font-weight:900;font-size:12px;max-width:140px}.weather small{font-size:10px;color:#a88458}
+.floating-tools{position:absolute;right:13px;top:calc(env(safe-area-inset-top) + 113px);display:flex;flex-direction:column;gap:9px}.float-btn{width:53px;height:53px;position:relative;border-radius:19px;background:linear-gradient(180deg,#fffdf5,#fce8ba);border:2px solid #fff;box-shadow:0 5px 0 #c99d62,0 8px 15px #3d5a2a35;font-size:26px;display:grid;place-items:center}.float-btn b{position:absolute;top:-7px;left:-5px;background:#ef6c57;color:white;border:2px solid white;border-radius:12px;padding:2px 5px;font-size:10px}.hint{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom) + 111px);transform:translateX(-50%);background:#493621ce;color:#fff7df;padding:9px 16px;border:1px solid #fff6;border-radius:20px;font-size:12px;white-space:nowrap;max-width:95vw;overflow:hidden;text-overflow:ellipsis;pointer-events:none;text-align:center;box-shadow:0 4px 15px #3333;transition:opacity .3s}.dock{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 10px);left:50%;transform:translateX(-50%);width:min(610px,calc(100% - 18px));height:88px;display:flex;align-items:center;justify-content:space-evenly;gap:3px;padding:7px;background:linear-gradient(180deg,#fff8da,#ecd29a);border:3px solid #fff7dc;border-bottom:7px solid #bd8e54;border-radius:25px;box-shadow:0 11px 25px #34532470}.dock button{min-width:0;flex:1;height:67px;border-radius:17px;background:linear-gradient(180deg,#fffef3,#ffe4b9);border:2px solid #fffdf6;border-bottom:4px solid #d3a36c;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:2px;color:#745236;font-weight:1000;font-size:10px;white-space:nowrap}.dock button.selected,.dock button:active{background:linear-gradient(180deg,#fff3b7,#fbc462);border-bottom-color:#b47831}.dock .ico{font-size:28px;line-height:1.08;filter:drop-shadow(0 2px 1px #93755233)}
+.zoom-controls{position:absolute;bottom:calc(env(safe-area-inset-bottom) + 115px);right:13px;display:flex;flex-direction:column;gap:6px}.zoom-controls button{width:39px;height:39px;border-radius:14px;background:#fff8e9de;border:2px solid white;color:#805b35;font-size:24px;font-weight:900;box-shadow:0 3px 0 #bc9860}.toast{position:absolute;top:calc(env(safe-area-inset-top) + 143px);left:50%;transform:translate(-50%,-10px);background:#503720f0;color:white;border:2px solid #fff8;border-radius:19px;padding:12px 18px;font-weight:800;font-size:13px;text-align:center;opacity:0;pointer-events:none;transition:transform .25s,opacity .25s;max-width:90vw;z-index:30}.toast.show{opacity:1;transform:translate(-50%,0)}
+#sheetBackdrop{position:absolute;inset:0;background:#1a251455;z-index:11;display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}#sheetBackdrop.open{display:flex}#sheet{width:min(530px,100%);max-height:min(78dvh,780px);overflow:auto;background:linear-gradient(180deg,#fffae9,#f7e3bb);border:3px solid #fff7df;border-bottom:0;border-radius:29px 29px 0 0;box-shadow:0 -9px 40px #1e2b205e;padding:17px 15px calc(env(safe-area-inset-bottom) + 20px);color:#67422c;animation:sheetIn .23s ease-out;scrollbar-width:thin}#sheet::-webkit-scrollbar{width:5px}#sheet::-webkit-scrollbar-thumb{background:#cda779;border-radius:20px}@keyframes sheetIn{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}.sheet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:10px}.sheet-head h2{margin:0;font-size:21px;color:#70442e;text-shadow:0 1px white}.sheet-head .sub{font-size:12px;color:#a07953;margin:5px 0 0}.close-btn{width:39px;height:39px;background:#ffe4cf;border:2px solid white;border-bottom:4px solid #e6b999;border-radius:14px;color:#9d5e4e;font-size:25px;line-height:1;flex-shrink:0}.card-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.item-card{min-width:0;background:linear-gradient(180deg,#fffef5,#fff1d9);border:2px solid #fff;border-bottom:5px solid #e6c18d;border-radius:20px;padding:12px;text-align:right;box-shadow:0 2px 8px #8b5a2714}.card-icon{height:51px;display:grid;place-items:center;font-size:38px;margin-bottom:4px;filter:drop-shadow(0 3px 1px #71523520)}.card-name{font-size:15px;font-weight:1000}.card-desc{font-size:11px;color:#a07852;min-height:27px;margin-top:4px;line-height:1.6}.pill-row{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:10px}.mini-pill{font-size:11px;font-weight:900;border-radius:15px;background:#f4e4c9;padding:5px 7px}.green-btn,.orange-btn,.red-btn,.muted-btn{border-radius:13px;color:white;background:linear-gradient(180deg,#74d871,#369f54);border:2px solid #c9ffc5;border-bottom:4px solid #277a46;font-weight:950;font-size:12px;padding:9px 12px;text-shadow:0 1px #367537;box-shadow:0 4px 9px #30783d20;white-space:nowrap}.orange-btn{background:linear-gradient(#ffcd6e,#ed8a39);border-color:#fff3b2;border-bottom-color:#bd672f}.red-btn{background:linear-gradient(#ff9c8d,#e86652);border-color:#ffe9d1;border-bottom-color:#bb5442}.muted-btn{background:linear-gradient(#d9ccad,#b7a27e);border-color:#fff3d4;border-bottom-color:#918066}.green-btn:disabled,.orange-btn:disabled{filter:grayscale(.72);opacity:.65;cursor:default}.stack{display:flex;flex-direction:column;gap:10px}.list-card{display:flex;align-items:center;gap:12px;border-radius:20px;background:#fff9ec;border:2px solid white;border-bottom:4px solid #dec19b;padding:12px}.list-icon{width:51px;height:51px;display:grid;place-items:center;background:#fff0ce;border-radius:15px;font-size:30px;flex-shrink:0}.list-body{flex:1;min-width:0}.list-title{font-weight:1000;font-size:14px}.list-desc{font-size:11px;color:#a07b59;margin-top:5px;line-height:1.5}.section-title{font-size:15px;font-weight:1000;margin:12px 1px 9px}.inv-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.inv-cell{border-radius:17px;background:#fffaf0;border:2px solid white;border-bottom:4px solid #e9cba2;padding:8px;text-align:center}.inv-cell .i{font-size:27px}.inv-cell .n{font-weight:900;font-size:11px}.inv-cell .v{font-weight:1000;font-size:14px;color:#44964d}.progress{height:12px;border-radius:14px;background:#e3cb9e;border:2px solid #fff1d6;overflow:hidden;margin:8px 0}.progress span{display:block;height:100%;border-radius:12px;background:linear-gradient(90deg,#a6e76e,#4bad53);transition:width .3s}.big-action{width:100%;font-size:15px;padding:13px}.empty{font-size:12px;color:#9b744d;text-align:center;padding:20px 8px}.field-note{background:#fff5d8;border:1px dashed #d5ad71;border-radius:15px;padding:10px;margin:10px 0;font-size:12px;line-height:1.7}.order-line{display:flex;align-items:center;flex-wrap:wrap;gap:7px;margin:8px 0;font-size:13px}.order-line .need{background:#f4e5cb;border-radius:14px;padding:5px 8px;font-weight:900}.order-line .ok{background:#dff1c5;color:#39854b}.craft-done{color:#3c9f49;font-size:12px;font-weight:900}.mode-sign{position:absolute;top:calc(env(safe-area-inset-top) + 152px);left:50%;transform:translateX(-50%);background:#fff5d7f2;border:2px solid white;border-bottom:4px solid #d4a65f;border-radius:19px;padding:10px 13px;text-align:center;font-weight:900;font-size:13px;display:none;z-index:8;max-width:90vw}.mode-sign button{background:#ffdfcf;border-radius:9px;padding:4px 8px;margin-right:9px;color:#a95344;font-weight:900}
+@media(min-width:800px){.logo-title{font-size:36px}.topbar{left:24px;right:24px}.dock{height:95px}.dock button{font-size:12px}.dock .ico{font-size:31px}.float-btn{width:59px;height:59px}.hint{font-size:13px}}@media(max-width:375px){.topbar{gap:3px;left:7px;right:7px}.profile{min-width:122px;padding:4px 6px;gap:5px}.avatar{width:33px;height:33px;font-size:20px}.money-pill{font-size:11px;padding:6px}.money-pill span{font-size:15px}.money-pill.gems .plus{display:none}.logo-title{font-size:24px}.dock{gap:1px;padding:5px}.dock button{font-size:9px}.dock .ico{font-size:25px}.hint{font-size:10px}}
+</style>
+<style id="phase-one-visual-redesign">
+/* Real game visual redesign, not the static concept illustration. */
+:root{--brown:#683e20;--dark:#4b301e;--cream:#fff5d9;--gold:#ffca55}
+body{background:#79bb5a}
+.topbar .profile{background:linear-gradient(165deg,#fff3cd,#e1b06b);border:2px solid #fff6d2;border-bottom:5px solid #9b673a;border-radius:18px;box-shadow:inset 0 1px #fff8d8,0 6px 0 #72482738,0 9px 19px #36291436}
+.topbar .money-pill{background:linear-gradient(180deg,#392b22,#4e3126);color:#fff6d9;border:2px solid #f7cd7f;border-bottom:5px solid #a76830;box-shadow:0 4px 10px #263f2b52;text-shadow:0 1px 2px #140e09}
+.topbar .money-pill.gems{background:linear-gradient(180deg,#46302c,#573b33);border-bottom-color:#995e54}
+.logo{top:calc(env(safe-area-inset-top) + 75px)}
+.logo-title{font-size:clamp(22px,7vw,34px);color:#fff1b5;text-shadow:0 4px #7f4823,2px 1px #633d25,-2px -1px #633d25,0 6px 14px #38230c}
+.logo-sub{font-size:10px;letter-spacing:2px;color:#fff9d7;text-shadow:0 2px #344d20}
+.weather{background:linear-gradient(145deg,#fff2cb,#e8c18b);border:2px solid #fef2c8;border-bottom:4px solid #a66e3f}
+.float-btn,.zoom-controls button{background:linear-gradient(160deg,#ffe8b9,#d9a266);border:2px solid #fff4c9;border-bottom:5px solid #9e633a;color:#614025;box-shadow:inset 0 2px #fff4d2,0 5px 14px #34210d65}
+.dock{height:92px;background:transparent;border:0;border-radius:0;box-shadow:none;gap:6px;padding:0;bottom:calc(env(safe-area-inset-bottom) + 9px)}
+.dock button{height:82px;background:linear-gradient(180deg,#f8db9b 0%,#deac69 58%,#a96a3b 100%);border:2px solid #ffe7b4;border-bottom:6px solid #754622;border-radius:19px;box-shadow:inset 0 1px #fff5d6,0 4px 12px #35230c65;color:#fff6d9;text-shadow:0 2px 2px #684029;letter-spacing:0}
+.dock .ico{font-size:30px;filter:drop-shadow(1px 3px 0 #7a4c2d55)}
+.dock button:active{background:linear-gradient(#ffe29d,#c98c4c)}
+.hint{background:linear-gradient(145deg,#654729eb,#3e291df0);border-color:#f6d7a199}
+#sheet{background:linear-gradient(180deg,#fff8db,#efd3a1);border-color:#fff0c5}
+@media(max-width:375px){.dock{gap:3px}.dock button{height:75px;border-radius:14px;font-size:9px}.dock .ico{font-size:25px}.logo{top:calc(env(safe-area-inset-top) + 77px)}}
+</style>
+</head>
+<body>
+<canvas id="game" aria-label="المزرعة التفاعلية"></canvas>
+<div id="ui">
+  <header class="topbar"><div class="profile"><div class="avatar">👨🏻‍🌾</div><div style="flex:1"><div class="profile-name">مزرعتي السعيدة</div><div class="level-line" id="levelText">المستوى 2</div><div class="level-track"><div class="level-fill" id="levelFill"></div></div></div></div><div class="wallet"><div class="money-pill"><span>🪙</span><b id="coinText">650</b><div class="plus">+</div></div><div class="money-pill gems"><span>💎</span><b id="gemText">20</b></div></div></header>
+  <div class="logo"><div class="logo-title">☀️ مزرعة الشمس</div><div class="logo-sub">SUNNY FARM VALLEY</div></div>
+  <button class="weather" id="weatherBtn" title="الطقس">☀️ مشمس <small>٢٤°</small></button>
+  <div class="floating-tools"><button class="float-btn" id="questBtn" title="المهام">📜<b id="questBadge">3</b></button><button class="float-btn" id="expandBtn" title="توسعة المزرعة">🗺️</button><button class="float-btn" id="decorBtn" title="ديكور المزرعة">🌻</button></div>
+  <div class="zoom-controls"><button id="zoomIn" aria-label="تكبير">+</button><button id="zoomOut" aria-label="تصغير">−</button></div>
+  <div class="hint" id="hint">🌾 اضغط على التراب لزراعة محصول، واسحب لتحريك المزرعة</div>
+  <div class="mode-sign" id="modeSign"></div>
+  <nav class="dock"><button id="plantsBtn"><span class="ico">🌱</span>الزراعة</button><button id="animalsBtn"><span class="ico">🐮</span>الحيوانات</button><button id="factoriesBtn"><span class="ico">🏭</span>المصانع</button><button id="ordersBtn"><span class="ico">🚚</span>الطلبات</button><button id="shopBtn"><span class="ico">🛒</span>السوق</button></nav>
+  <div id="toast" class="toast"></div>
+  <div id="sheetBackdrop"><section id="sheet" role="dialog" aria-modal="true" aria-label="قائمة اللعبة"></section></div>
+</div>
+<script>
+(()=>{'use strict';
+const $=id=>document.getElementById(id), canvas=$('game'), ctx=canvas.getContext('2d',{alpha:false});
+const W=106,H=54,MAP=16, SAVE_KEY='sunny_farm_valley_v3';let sw=0,sh=0,dpr=1,zoom=1,panX=0,panY=0,tick=0,frame=0;
+const CROPS={wheat:{name:'قمح ذهبي',icon:'🌾',color:'#f5ca51',time:13000,cost:2,yield:4,xp:5,level:1,sell:5},corn:{name:'ذرة حلوة',icon:'🌽',color:'#e6d854',time:26000,cost:3,yield:4,xp:8,level:2,sell:7},carrot:{name:'جزر طازج',icon:'🥕',color:'#f28b3e',time:38000,cost:4,yield:4,xp:11,level:3,sell:9},sugar:{name:'قصب السكر',icon:'🎋',color:'#8cde69',time:58000,cost:6,yield:4,xp:15,level:4,sell:12},strawberry:{name:'فراولة',icon:'🍓',color:'#f65c62',time:75000,cost:8,yield:3,xp:19,level:5,sell:18},pumpkin:{name:'يقطين',icon:'🎃',color:'#f9ab3b',time:100000,cost:11,yield:3,xp:25,level:6,sell:25}};
+const GOODS={...CROPS,egg:{name:'بيض طازج',icon:'🥚',sell:16},milk:{name:'حليب',icon:'🥛',sell:22},wool:{name:'صوف ناعم',icon:'🧶',sell:36},bread:{name:'خبز طازج',icon:'🍞',sell:35},cheese:{name:'جبن',icon:'🧀',sell:52},feed:{name:'علف',icon:'🌿',sell:15},syrup:{name:'شراب السكر',icon:'🍯',sell:70},jam:{name:'مربى',icon:'🫙',sell:92}};
+const FAC={bakery:{name:'المخبز الدافئ',icon:'🥐',lvl:1,recipes:[{item:'bread',ingredients:{wheat:3},ms:24000,xp:16}]},mill:{name:'مطحنة العلف',icon:'🌾',lvl:1,recipes:[{item:'feed',qty:3,ingredients:{wheat:2,corn:1},ms:19000,xp:12}]},dairy:{name:'معمل الألبان',icon:'🧀',lvl:3,recipes:[{item:'cheese',ingredients:{milk:2,corn:1},ms:47000,xp:26}]},sugarmill:{name:'معمل الحلويات',icon:'🍯',lvl:4,recipes:[{item:'syrup',ingredients:{sugar:3},ms:55000,xp:35},{item:'jam',ingredients:{strawberry:3,sugar:1},ms:80000,xp:45,level:5}]}};
+const ANIMALS={
+chicken:{name:'حظيرة الدجاج',icon:'🐔',lvl:1,item:'egg',qty:2,ms:30000,xp:8,req:{wheat:2},x:2,y:8,desc:'الدجاج يحب الحبوب ويعطيك بيضًا طازجًا'},
+cow:{name:'مرعى الأبقار',icon:'🐄',lvl:2,item:'milk',qty:2,ms:49000,xp:13,req:{corn:3},x:10,y:7,desc:'أطعم الأبقار الذرة واجمع الحليب'},
+sheep:{name:'مرعى الأغنام',icon:'🐑',lvl:3,item:'wool',qty:2,ms:64000,xp:18,req:{wheat:2,feed:1},x:13,y:8,desc:'الأغنام تنتج الصوف لتبيعه في السوق'}
+};
+const STATIC=[
+ {x:3,y:2,type:'house',name:'بيت المزرعة',span:2},
+ {x:8,y:2,type:'barn',name:'الحظيرة الكبيرة',span:2},
+ {x:2,y:8,type:'chicken',name:'حظيرة الدجاج',span:2},
+ {x:10,y:7,type:'cow',name:'مرعى الأبقار',span:2},
+ {x:13,y:8,type:'sheep',name:'مرعى الأغنام',span:1.4},
+ {x:6,y:10,type:'bakery',name:'المخبز',span:2},
+ {x:11,y:10,type:'dairy',name:'معمل الألبان',span:2},
+ {x:2,y:12,type:'mill',name:'مطحنة العلف',span:2},
+ {x:13,y:4,type:'sugarmill',name:'معمل الحلويات',span:2},
+ {x:12,y:1,type:'pond',name:'بركة البط'},
+ {x:1,y:4,type:'orchard',name:'بستان الأشجار'},
+ {x:7,y:14,type:'market',name:'بسطة السوق'},
+ {x:12,y:13,type:'truck',name:'لوحة الطلبات'}
+];
+const PLOT_POS=[[5,4],[6,4],[7,4],[5,5],[6,5],[7,5],[5,6],[6,6],[7,6],[4,4],[4,5],[4,6],[8,5],[8,6],[6,7],[7,7],[8,7],[5,7],[9,5],[10,4],[4,7],[3,6],[3,5],[6,8]];
+function fresh(){return {coins:650,gems:20,level:2,xp:4,inventory:{wheat:8,corn:5,egg:2,feed:3,milk:0,wool:0},plots:PLOT_POS.slice(0,9).map(([x,y],i)=>({x,y,crop:[1,2,6].includes(i)?'wheat':i===4?'corn':null,at:i===1?Date.now()-16000:i===2?Date.now()-7000:i===4?Date.now()-13000:i===6?Date.now()-3500:0})),animals:{chicken:{ready:true,end:0},cow:{ready:false,end:0},sheep:{ready:false,end:0}},factories:{bakery:null,mill:null,dairy:null,sugarmill:null},orders:[],stats:{harvest:0,eggs:0,wool:0,orders:0},questsClaimed:{},decors:[],land:0,music:false,weather:false};}
+let s=fresh();try{let d=JSON.parse(localStorage.getItem(SAVE_KEY)||'null');if(d&&typeof d.coins==='number'&&d.plots&&d.inventory){s={...fresh(),...d,animals:{...fresh().animals,...d.animals},factories:{...fresh().factories,...d.factories},stats:{...fresh().stats,...d.stats},questsClaimed:d.questsClaimed||{},decors:d.decors||[]};}}catch(e){}
+const questDefs=[{key:'harvest',name:'موسم حصاد سعيد',desc:'احصد ٨ مرات من حقولك',icon:'🌾',target:8,reward:115,xp:22},{key:'eggs',name:'فطور أهل القرية',desc:'اجمع ٤ بيضات من الدجاج',icon:'🥚',target:4,reward:135,xp:24},{key:'wool',name:'صوف الأغنام',desc:'اجمع ٤ قطع صوف من أغنامك',icon:'🧶',target:4,reward:190,xp:32},{key:'orders',name:'تاجر القرية',desc:'سلّم طلبين للشاحنة',icon:'🚚',target:2,reward:170,xp:30}];
+const rnd=(a,b)=>{let n=Math.sin(a*127.1+b*311.7)*43758.5453;return n-Math.floor(n);};
+function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(s));}catch(e){}};
+function lvlGoal(l){return 26+l*23;}function inv(item){return s.inventory[item]||0;}function add(item,n){s.inventory[item]=Math.max(0,inv(item)+n);}function money(n){s.coins=Math.max(0,s.coins+n);updateHUD();}
+function grantXP(n){s.xp+=n;let gained=0;while(s.xp>=lvlGoal(s.level)){s.xp-=lvlGoal(s.level);s.level++;s.coins+=70+s.level*20;gained++;}if(gained){toast('🎉 وصلت للمستوى '+s.level+'! فتحنا لك أشياء جديدة');bursts(sw*.5,sh*.33,'#ffd350',35);}updateHUD();save();}
+function updateHUD(){$('coinText').textContent=s.coins.toLocaleString('ar-SA');$('gemText').textContent=s.gems;$('levelText').textContent='المستوى '+s.level;$('levelFill').style.width=Math.min(100,100*s.xp/lvlGoal(s.level))+'%';$('questBadge').textContent=questDefs.filter(q=>!s.questsClaimed[q.key]).length;}
+function spawnOrder(i){const allowed=['wheat','corn','egg','bread','feed',...(s.level>=3?['carrot','milk','wool']:[]),...(s.level>=4?['sugar','cheese']:[]),...(s.level>=5?['strawberry']:[])];const j=Math.floor(rnd(Date.now()%999999+i*31,i+3)*allowed.length);const item=allowed[j];let q=(item==='wheat'||item==='corn'?4+Math.floor(rnd(i,Date.now()%300)*3):item==='egg'?2: item==='feed'?2:1);return {id:Date.now()+i*33,item,qty:q,coins:Math.round(q*(GOODS[item].sell||10)*1.85+20),xp:12+q*4};}
+if(!s.orders?.length){s.orders=[{id:1,item:'wheat',qty:5,coins:63,xp:14},{id:2,item:'egg',qty:2,coins:86,xp:18},{id:3,item:'corn',qty:4,coins:75,xp:17}];}
+let pointer=null,moving=false,activeSheet='',selectedPlot=null,placeMode=null,toastTimer=null,particles=[],floatings=[],truckAnim=0,weatherShift=0,weatherOn=false;
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2400)}
+function hints(txt){$('hint').textContent=txt;$('hint').style.opacity='1';}
+function showMode(txt){const el=$('modeSign');el.style.display='block';el.innerHTML='<span>'+txt+'</span><button id="stopMode">إلغاء ✕</button>';$('stopMode').onclick=()=>{placeMode=null;el.style.display='none'}}
+function closeMode(){placeMode=null;$('modeSign').style.display='none'}
+function openSheet(title,desc,body){activeSheet=title;$('sheet').innerHTML=`<div class="sheet-head"><div><h2>${title}</h2>${desc?`<p class="sub">${desc}</p>`:''}</div><button class="close-btn" id="sheetClose" aria-label="إغلاق">×</button></div>${body}`;$('sheetBackdrop').classList.add('open');$('sheetClose').onclick=closeSheet;}
+function closeSheet(){$('sheetBackdrop').classList.remove('open');activeSheet=''}
+$('sheetBackdrop').addEventListener('pointerdown',e=>{if(e.target===$('sheetBackdrop'))closeSheet()});
+function progressBar(p){return `<div class="progress"><span style="width:${Math.min(100,Math.max(0,p))}%"></span></div>`;}
+function itemIcon(k){return GOODS[k]?.icon||'🎁'}
+function afford(ingredients){return Object.entries(ingredients).every(([k,n])=>inv(k)>=n)}
+function missingText(ingredients){return Object.entries(ingredients).map(([k,n])=>`${itemIcon(k)} ${n} <span style="color:${inv(k)>=n?'#4e9c59':'#d25b51'}">(عندك ${inv(k)})</span>`).join(' + ')}
+function pickSeed(plot){selectedPlot=plot;let html='<div class="field-note">اختر محصولًا، ثم ارجع للحقل لما يكبر حتى تحصده. كل محصول ينتج عدة وحدات! 🌻</div><div class="card-grid">';for(let [k,c]of Object.entries(CROPS)){const lock=s.level<c.level;html+=`<div class="item-card"><div class="card-icon">${c.icon}</div><div class="card-name">${c.name}</div><div class="card-desc">⏱️ ${Math.round(c.time/1000)} ثانية · 📦 ${c.yield} محاصيل</div><div class="pill-row"><span class="mini-pill">🪙 ${c.cost}</span><button class="${lock?'muted-btn':'green-btn'}" ${lock||s.coins<c.cost?'disabled':''} data-seed="${k}">${lock?'🔒 مستوى '+c.level:'ازرع 🌱'}</button></div></div>`;}html+='</div>';openSheet('🌱 هيا نزرع!','حقل جاهز لبداية جديدة',html);document.querySelectorAll('[data-seed]').forEach(b=>b.onclick=()=>plant(plot,b.dataset.seed));}
+function plant(plot,k){const c=CROPS[k];if(!c||s.level<c.level||s.coins<c.cost){toast('🪙 تحتاج عملات أو مستوى أعلى');return}plot.crop=k;plot.at=Date.now();money(-c.cost);bursts(...posOf(plot.x,plot.y),'#d5f797',8);floatText(plot.x,plot.y,'🌱 زراعة!');closeSheet();updateHUD();save();}
+function harvest(plot){const c=CROPS[plot.crop];if(Date.now()-plot.at<c.time){showCrop(plot);return}add(plot.crop,c.yield);s.stats.harvest++;grantXP(c.xp);floatText(plot.x,plot.y,'+'+c.yield+' '+c.icon);bursts(...posOf(plot.x,plot.y),c.color,16);plot.crop=null;plot.at=0;toast('✨ حصاد رائع! +'+c.yield+' '+c.name);save();}
+function showCrop(plot){let c=CROPS[plot.crop],remaining=Math.max(0,c.time-(Date.now()-plot.at)),ready=remaining===0;let body=`<div style="text-align:center;font-size:67px;margin:12px">${c.icon}</div><div style="text-align:center;font-size:16px;font-weight:1000">${ready?'محصولك جاهز للحصاد!':'محصولك ينمو الآن...'}</div>${progressBar(100-100*remaining/c.time)}<div class="field-note">${ready?'احصد الآن واحصل على '+c.yield+' محاصيل.':'متبقي '+Math.ceil(remaining/1000)+' ثانية · تستطيع إكمال أعمال المزرعة والعودة لاحقًا.'}</div><button class="green-btn big-action" id="cropAction">${ready?'🌾 احصد المحصول':'✨ أسرع النمو (💎 1)'}</button>`;openSheet(c.icon+' '+c.name,'من حقل مزرعتك',body);$('cropAction').onclick=()=>{if(ready){harvest(plot);closeSheet();}else if(s.gems>0){s.gems--;plot.at=Date.now()-c.time;updateHUD();save();showCrop(plot)}else toast('💎 ما عندك جواهر كافية')};}
+function animalSheet(key){
+ const c=ANIMALS[key],a=s.animals[key];if(!c||!a)return;
+ if(s.level<c.lvl){openSheet('🔒 '+c.name,'حيوانات جديدة تفتح مع تقدمك',`<div style="font-size:70px;text-align:center;margin:12px">🐑</div><div class="field-note">مرعى الأغنام يفتح عند المستوى ${c.lvl}. احصد محاصيلك ولبِّ طلبات الشاحنة لتجمع الخبرة!</div>`);return;}
+ const ready=!!(a.ready||(a.end&&Date.now()>=a.end));
+ if(ready&&a.end){a.ready=true;a.end=0;save();}
+ const busy=!!(a.end&&!ready),seconds=Math.ceil(Math.max(0,(a.end||0)-Date.now())/1000);
+ let html=`<div style="text-align:center;font-size:68px;margin:8px">${c.icon}</div><div class="field-note">${c.desc}</div><div style="text-align:center;font-weight:1000;font-size:16px;margin:12px">${ready?'✨ المنتج جاهز للاستلام!':busy?'⏳ الحيوانات تتغذى وتنتج الآن':'🌿 حيواناتك تنتظر وجبتها!'}</div>`;
+ if(busy){html+=progressBar(100-100*seconds*1000/c.ms)+`<p style="text-align:center;font-weight:900">متبقي ${seconds} ثانية</p>`;}
+ else if(ready){html+=`<button class="green-btn big-action" id="animalAction">${GOODS[c.item].icon} اجمع ${c.qty} ${GOODS[c.item].name}</button>`;}
+ else {html+=`<p class="section-title">🌿 الطعام المطلوب</p><div class="field-note">${missingText(c.req)}</div><button class="green-btn big-action" id="animalAction" ${!afford(c.req)?'disabled':''}>🌾 أطعم الحيوانات</button>`;}
+ openSheet(c.icon+' '+c.name,'مرحلة الحيوانات • تغذية وإنتاج',html);
+ const action=$('animalAction');
+ if(action)action.onclick=()=>{
+   if(ready){
+     add(c.item,c.qty);a.ready=false;a.end=0;
+     if(key==='chicken')s.stats.eggs+=c.qty;
+     if(key==='sheep')s.stats.wool=(s.stats.wool||0)+c.qty;
+     grantXP(c.xp);bursts(...posOf(c.x,c.y),'#ffe3a4',24);
+     floatText(c.x,c.y,'+'+c.qty+' '+GOODS[c.item].icon);
+     toast('🎉 جمعت '+c.qty+' '+GOODS[c.item].name);
+   } else if(!a.end&&afford(c.req)){
+     Object.entries(c.req).forEach(([item,n])=>add(item,-n));
+     a.end=Date.now()+c.ms;a.ready=false;toast('💚 بدأ إنتاج '+GOODS[c.item].name+'!');
+   }
+   save();animalSheet(key);
+ };
+}
+function factorySheet(k){let f=FAC[k];if(s.level<f.lvl){return openSheet('🔒 '+f.name,'المبنى يحتاج تطوير المزرعة',`<div class="empty" style="font-size:40px">🏗️</div><div class="field-note">افتح ${f.name} عند الوصول إلى المستوى ${f.lvl}. اجمع الخبرة من الزراعة والطلبات!</div>`)}let task=s.factories[k];let done=task&&Date.now()>=task.end;let html=`<div class="field-note">${task?done?'✨ تم تجهيز المنتج! اضغط لاستلامه.':'🔥 المصنع يعمل الآن... يمكنك متابعة المزرعة.':'اختر منتجًا لصناعته من محاصيل مزرعتك.'}</div>`;
+if(task){let good=GOODS[task.item],r=f.recipes.find(r=>r.item===task.item);html+=`<div class="list-card"><div class="list-icon">${good.icon}</div><div class="list-body"><div class="list-title">${good.name} × ${task.qty}</div><div class="list-desc">${done?'جاهز للاستلام!':'باقي '+Math.ceil((task.end-Date.now())/1000)+' ثانية'}</div>${progressBar(done?100:100-(task.end-Date.now())/r.ms)}</div></div><br><button id="factoryTake" class="${done?'green-btn':'muted-btn'} big-action" ${!done?'disabled':''}>${done?'📦 استلم المنتج':'⏳ جاري الإنتاج'}</button>`;}else{html+='<div class="stack">';for(let r of f.recipes){let lock=s.level<(r.level||1);html+=`<div class="list-card"><div class="list-icon">${itemIcon(r.item)}</div><div class="list-body"><div class="list-title">${GOODS[r.item].name} × ${r.qty||1}</div><div class="list-desc">${missingText(r.ingredients)}<br>⏱️ ${Math.round(r.ms/1000)} ثانية</div></div><button class="${lock?'muted-btn':'orange-btn'}" data-craft="${r.item}" ${lock||!afford(r.ingredients)?'disabled':''}>${lock?'🔒':'اصنع'}</button></div>`;}html+='</div>';}openSheet(f.icon+' '+f.name,'الإنتاج والتصنيع',html);
+if(task&&done){$('factoryTake').onclick=()=>{add(task.item,task.qty);s.factories[k]=null;grantXP(f.recipes.find(r=>r.item===task.item).xp);toast('📦 استلمت '+GOODS[task.item].name);bursts(...posOf((STATIC.find(o=>o.type===k)||{x:6}).x,(STATIC.find(o=>o.type===k)||{y:10}).y),'#ffe36b',19);save();factorySheet(k)}}
+document.querySelectorAll('[data-craft]').forEach(b=>b.onclick=()=>{let r=f.recipes.find(r=>r.item===b.dataset.craft);if(!r||!afford(r.ingredients))return toast('المكونات غير كافية');Object.entries(r.ingredients).forEach(([item,n])=>add(item,-n));s.factories[k]={item:r.item,qty:r.qty||1,end:Date.now()+r.ms};toast('🔥 بدأ التصنيع!');save();factorySheet(k)});}
+function ordersSheet(){let html='<div class="field-note">🚚 جهّز المطلوب وسلمه للسائق. يعطيك عملات ذهبية وخبرة ويجيب لك طلبات جديدة!</div><div class="stack">';for(let [i,o]of s.orders.entries()){let okay=inv(o.item)>=o.qty;html+=`<div class="list-card"><div class="list-icon">${i===0?'🚛':i===1?'📦':'🧑‍🌾'}</div><div class="list-body"><div class="list-title">طلب القرية #${i+1}</div><div class="list-desc">مطلوب: ${itemIcon(o.item)} ${GOODS[o.item].name} <b>${o.qty}</b> (عندك ${inv(o.item)})</div><div class="list-desc" style="color:#58883b;font-weight:950">🪙 ${o.coins} + ⭐ ${o.xp}</div></div><button data-order="${i}" class="${okay?'green-btn':'muted-btn'}" ${okay?'':'disabled'}>سلّم</button></div>`;}html+='</div>';openSheet('🚚 طلبات القرية','اربح من منتجات مزرعتك',html);document.querySelectorAll('[data-order]').forEach(b=>b.onclick=()=>{let i=+b.dataset.order,o=s.orders[i];if(!o||inv(o.item)<o.qty)return;add(o.item,-o.qty);money(o.coins);grantXP(o.xp);s.stats.orders++;truckAnim=Date.now();floatText(12,13,'🪙 +'+o.coins);s.orders[i]=spawnOrder(i+Math.floor(Math.random()*100));save();toast('🚚 تم توصيل الطلب! +'+o.coins+' عملة');ordersSheet()});}
+function marketSheet(){let html='<div class="field-note">🛒 الدكان يشتري منك الفائض بالسعر المعروض. وخزنة المستودع تحفظ كل منتجاتك تلقائيًا.</div><div class="inv-grid">';for(let [k,item]of Object.entries(GOODS)){let n=inv(k);if(n===0&&!(k in CROPS))continue;html+=`<div class="inv-cell"><div class="i">${item.icon}</div><div class="n">${item.name}</div><div class="v">× ${n}</div><button class="orange-btn" style="font-size:10px;padding:6px 9px;margin-top:5px" data-sell="${k}" ${n<1?'disabled':''}>بع 1 🪙${item.sell}</button></div>`;}html+='</div><p class="section-title">تطويرات المزرعة</p><div class="list-card"><div class="list-icon">🌱</div><div class="list-body"><div class="list-title">افتح حقلًا جديدًا</div><div class="list-desc">مساحة إضافية لزراعة محاصيل أكثر</div></div><button class="green-btn" id="buyPlot">🪙 '+plotPrice()+'</button></div>';
+openSheet('🛒 دكان القرية','بيع، تطوير، وتجارة',html);document.querySelectorAll('[data-sell]').forEach(b=>b.onclick=()=>{let k=b.dataset.sell;if(inv(k)<1)return;add(k,-1);money(GOODS[k].sell);save();marketSheet();});$('buyPlot').onclick=buyPlot;}
+function plotPrice(){return 100+Math.max(0,s.plots.length-9)*55;}
+function buyPlot(){if(s.plots.length>=PLOT_POS.length){toast('🌾 فتحت كل الحقول!');return}let cost=plotPrice();if(s.coins<cost){toast('🪙 تحتاج '+cost+' عملة لشراء الحقل');return}money(-cost);let [x,y]=PLOT_POS[s.plots.length];s.plots.push({x,y,crop:null,at:0});grantXP(7);floatText(x,y,'🌱 حقل جديد!');save();toast('✨ فتحت حقل جديد!');marketSheet();}
+function plantsSheet(){let total=s.plots.length;let html=`<div class="field-note">🌾 عندك ${total} حقول · ${s.plots.filter(p=>p.crop&&Date.now()-p.at>=CROPS[p.crop].time).length} جاهزة للحصاد. اضغط على حقل التراب في المزرعة لتزرع.</div><div class="card-grid">`;for(let [k,c]of Object.entries(CROPS)){html+=`<div class="item-card"><div class="card-icon">${c.icon}</div><div class="card-name">${c.name}</div><div class="card-desc">${c.level>s.level?'🔒 يفتح بمستوى '+c.level:'متاح للزراعة'} · ⏱️ ${c.time/1000} ث</div><div class="pill-row"><span class="mini-pill">📦 ${inv(k)}</span><span class="mini-pill">🪙 ${c.sell} / وحدة</span></div></div>`;}html+='</div><br><button class="green-btn big-action" id="newField">🌱 أضف حقلًا · 🪙 '+plotPrice()+'</button>';openSheet('🌾 الزراعة والحصاد','ازرع وشاهد مزرعتك تكبر',html);$('newField').onclick=()=>{buyPlot();plantsSheet()};}
+function animalsOverview(){
+ let html='<div class="field-note">🐔🐄🐑 اضغط على الحظيرة للتغذية وجمع البيض والحليب والصوف. ستكمل الحيوانات الإنتاج حتى بعد إغلاق Safari.</div><div class="stack">';
+ for(const [k,c]of Object.entries(ANIMALS)){
+  const a=s.animals[k],locked=s.level<c.lvl,ready=a.ready||(a.end&&a.end<=Date.now()),busy=a.end&&!ready;
+  const detail=locked?'🔒 يفتح عند المستوى '+c.lvl:ready?'✨ المنتج جاهز للجمع':busy?'⏳ باقي '+Math.ceil((a.end-Date.now())/1000)+' ثانية':'🌿 تحتاج تغذية';
+  html+=`<div class="list-card"><div class="list-icon">${c.icon}</div><div class="list-body"><div class="list-title">${c.name}</div><div class="list-desc">${detail} · ${GOODS[c.item].icon} × ${c.qty}</div></div><button class="${locked?'muted-btn':'green-btn'}" data-animal="${k}">${locked?'🔒':'زيارة'}</button></div>`;
+ }
+ html+='</div>';
+ openSheet('🐮 حيوانات المزرعة','الإنتاج اليومي في مزرعتك',html);
+ document.querySelectorAll('[data-animal]').forEach(b=>b.onclick=()=>animalSheet(b.dataset.animal));
+}
+function factoriesOverview(){let html='<div class="stack">';for(let [k,f] of Object.entries(FAC)){let busy=s.factories[k],locked=s.level<f.lvl;html+=`<div class="list-card"><div class="list-icon">${f.icon}</div><div class="list-body"><div class="list-title">${f.name}</div><div class="list-desc">${locked?'🔒 يفتح بالمستوى '+f.lvl:busy?(Date.now()>=busy.end?'✨ المنتج جاهز':'🔥 يعمل حاليًا'):'جاهز لصنع منتجات رائعة'}</div></div><button class="${locked?'muted-btn':'green-btn'}" data-factory="${k}">${locked?'🔒':'دخول'}</button></div>`;}html+='</div>';openSheet('🏭 المصانع والإنتاج','حوّل المحاصيل إلى منتجات أغلى',html);document.querySelectorAll('[data-factory]').forEach(b=>b.onclick=()=>factorySheet(b.dataset.factory));}
+function questSheet(){let html='<div class="stack">';for(let q of questDefs){let v=s.stats[q.key]||0,done=v>=q.target,claimed=!!s.questsClaimed[q.key];html+=`<div class="list-card"><div class="list-icon">${q.icon}</div><div class="list-body"><div class="list-title">${q.name}</div><div class="list-desc">${q.desc} · ${Math.min(v,q.target)}/${q.target}</div>${progressBar(v/q.target*100)}<div style="font-size:11px;color:#9a6a38;font-weight:900">🪙 ${q.reward} + ⭐ ${q.xp}</div></div><button class="${done&&!claimed?'green-btn':'muted-btn'}" ${!done||claimed?'disabled':''} data-claim="${q.key}">${claimed?'✓ تم':done?'استلم':'قريبًا'}</button></div>`;}html+='</div>';openSheet('📜 لوحة الإنجازات','أنجز التحديات واربح المكافآت',html);document.querySelectorAll('[data-claim]').forEach(b=>b.onclick=()=>{let q=questDefs.find(x=>x.key===b.dataset.claim);if(!q||s.questsClaimed[q.key]||s.stats[q.key]<q.target)return;s.questsClaimed[q.key]=true;money(q.reward);grantXP(q.xp);toast('🏆 استلمت مكافأة '+q.name);save();questSheet()});}
+function landSheet(){let price=250+s.land*300,html=`<div style="text-align:center;font-size:65px;margin:4px">🏞️</div><div class="field-note">وسّع أراضي المزرعة للجهة الخضراء، وأضف ديكورات وتطويرات. توسعت ${s.land} مرة.</div><div class="list-card"><div class="list-icon">🪙</div><div class="list-body"><div class="list-title">افتح قطعة أرض خضراء</div><div class="list-desc">تفتح منطقة ذات أشجار وزهور جديدة</div></div><button id="landBuy" class="green-btn" ${s.land>=4?'disabled':''}>${s.land>=4?'مكتملة':price+' 🪙'}</button></div>`;openSheet('🗺️ توسعة المزرعة','أرض أكبر، فرص أجمل',html);$('landBuy').onclick=()=>{if(s.coins<price){toast('🪙 ما عندك عملات كفاية');return}if(s.land>=4)return;money(-price);s.land++;grantXP(35);bursts(sw*.5,sh*.4,'#b9f76b',28);toast('🏞️ فتحت أرضًا جديدة!');save();landSheet()};}
+const DECORS=[{type:'flower',name:'حديقة زهور',icon:'🌷',cost:35},{type:'tree',name:'شجرة تفاح',icon:'🌳',cost:60},{type:'fountain',name:'نافورة',icon:'⛲',cost:130},{type:'hay',name:'بالات قش',icon:'🟨',cost:25},{type:'bench',name:'جلسة خشبية',icon:'🪑',cost:45},{type:'windmill',name:'طاحونة هواء',icon:'🎡',cost:180}];
+function decorSheet(){let html='<div class="field-note">🎨 اختر زينة ثم اضغط على أرض فاضية في المزرعة لوضعها بالمكان اللي يعجبك.</div><div class="card-grid">';DECORS.forEach((d,i)=>html+=`<div class="item-card"><div class="card-icon">${d.icon}</div><div class="card-name">${d.name}</div><div class="pill-row"><span class="mini-pill">🪙 ${d.cost}</span><button class="orange-btn" data-decor="${i}" ${s.coins<d.cost?'disabled':''}>اختَر</button></div></div>`);html+='</div>';openSheet('🌻 زينة المزرعة','أجمل مزرعة من تصميمك',html);document.querySelectorAll('[data-decor]').forEach(b=>b.onclick=()=>{placeMode=DECORS[+b.dataset.decor];closeSheet();showMode('✨ اضغط على مكان فاضي لوضع '+placeMode.name);toast('🌼 اختر أرضًا داخل المزرعة')});}
+function landAllowed(x,y){let min=2-(s.land>=2?1:0)-(s.land>=4?1:0),max=13+(s.land>=1?1:0)+(s.land>=3?1:0);return x>=min&&y>=min&&x<=max&&y<=max;}
+function canPlace(x,y){if(x<0||y<0||x>=MAP||y>=MAP||!landAllowed(x,y))return false;if(s.plots.some(p=>p.x===x&&p.y===y))return false;if(STATIC.some(o=>Math.abs(o.x-x)<(o.span||1)&&Math.abs(o.y-y)<(o.span||1)))return false;return !s.decors.some(o=>o.x===x&&o.y===y);}
+function putDecor(x,y){if(!placeMode)return;if(!canPlace(x,y)){toast('🌿 اختر مساحة فاضية أخرى');return}if(s.coins<placeMode.cost){toast('🪙 تحتاج عملات أكثر');closeMode();return}money(-placeMode.cost);s.decors.push({x,y,type:placeMode.type});bursts(...posOf(x,y),'#ffe07d',20);floatText(x,y,'✨ '+placeMode.name);toast('🌸 تزيين رائع!');closeMode();save();}
+$('plantsBtn').onclick=plantsSheet;$('animalsBtn').onclick=animalsOverview;$('factoriesBtn').onclick=factoriesOverview;$('ordersBtn').onclick=ordersSheet;$('shopBtn').onclick=marketSheet;$('questBtn').onclick=questSheet;$('expandBtn').onclick=landSheet;$('decorBtn').onclick=decorSheet;
+$('weatherBtn').onclick=()=>{s.weather=!s.weather;weatherOn=s.weather;toast(weatherOn?'🌧️ بدأ المطر! اسمع أجواء المزرعة':'☀️ عادت الشمس المشرقة!');save()};
+$('zoomIn').onclick=()=>{zoom=Math.min(1.55,zoom+.12)};$('zoomOut').onclick=()=>{zoom=Math.max(.52,zoom-.12)};
+function resize(){let box=canvas.getBoundingClientRect();sw=box.width;sh=box.height;dpr=Math.min(2,devicePixelRatio||1);canvas.width=Math.round(sw*dpr);canvas.height=Math.round(sh*dpr);if(!resize.once){zoom=sw<550?.84:sw<880?1.02:1.18;panX=0;panY=0;resize.once=true}}window.addEventListener('resize',resize);resize();
+function proj(x,y){return [(x-y)*W*.5,(x+y)*H*.5]};function posOf(x,y){let [px,py]=proj(x,y);let [cx,cy]=proj(7,7);return [sw*.5+panX+(px-cx)*zoom,sh*.50+panY+(py-cy)*zoom]};function cellAt(sx,sy){let[cx,cy]=proj(7,7),xx=(sx-sw*.5-panX)/zoom+cx,yy=(sy-sh*.5-panY)/zoom+cy;return {x:Math.round((yy/H+xx/W)),y:Math.round((yy/H-xx/W))};}
+// Drawing helpers: all scenery is hand-painted vector artwork, no remote assets required.
+function poly(points,fill,stroke,lw=1){ctx.beginPath();ctx.moveTo(...points[0]);for(let i=1;i<points.length;i++)ctx.lineTo(...points[i]);ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke()}}
+function oval(x,y,rx,ry,fill,stroke,lw=1){ctx.beginPath();ctx.ellipse(x,y,Math.max(.01,rx),Math.max(.01,ry),0,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw;ctx.stroke()}}
+function roundRect(x,y,w,h,r,fill,stroke,lw=1){ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.lineWidth=lw;ctx.strokeStyle=stroke;ctx.stroke()}}
+function line(x,y,x2,y2,color,lw=1){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x2,y2);ctx.strokeStyle=color;ctx.lineWidth=lw;ctx.lineCap='round';ctx.stroke()}
+function txt(text,x,y,size=12,color='white',stroke='#653c2d',width=2){ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`900 ${size}px system-ui, sans-serif`;ctx.lineJoin='round';if(width){ctx.lineWidth=width*2;ctx.strokeStyle=stroke;ctx.strokeText(text,x,y)}ctx.fillStyle=color;ctx.fillText(text,x,y)}
+function shade(hex,diff){let v=hex.replace('#','');let rgb=[0,2,4].map(i=>Math.min(255,Math.max(0,parseInt(v.slice(i,i+2),16)+diff)));return '#'+rgb.map(i=>i.toString(16).padStart(2,'0')).join('')}
+function gradient(x,y,r,c1,c2){let g=ctx.createRadialGradient(x-r*.25,y-r*.32,2,x,y,r);g.addColorStop(0,c1);g.addColorStop(1,c2);return g}
+function drop(rx=43,ry=15){oval(0,6,rx,ry,'#254d2861')}
+function flower(x,y,scale=1,col='#ffc46e'){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);line(0,4,0,-5,'#428e3e',1.5);for(let i=0;i<5;i++){let a=i*Math.PI*2/5;oval(Math.cos(a)*3,Math.sin(a)*3-6,3,2.4,col)}oval(0,-6,2.4,2.4,'#ffec75');ctx.restore()}
+function grass(x,y,s=1){line(x,y,x-3*s,y-6*s,'#5cae53',1.5);line(x,y,x+1*s,y-8*s,'#8dd66a',1.5);line(x,y,x+3*s,y-4*s,'#4da54b',1.4)}
+function soilTile(){poly([[0,-H*.50],[W*.5,0],[0,H*.5],[-W*.5,0]],'#946034','#684c27',1.7);poly([[0,-H*.40],[W*.40,0],[0,H*.40],[-W*.40,0]],'#bd8144','#d39a57',1);for(let i=-2;i<=2;i++){let xx=i*14;line(xx-13,-2,xx+12,10,'#915a30',2.1);line(xx-12,-5,xx+11,7,'#d59c5e',1)}}
+function tile(x,y){
+ ctx.save();
+ const edge=!landAllowed(x,y),r=rnd(x+31,y+47);
+ const grassTones=edge?['#70a95a','#76b15d','#6ca653']:['#92ce65','#91cd67','#98d46c','#8dcb64'];
+ let color=grassTones[Math.floor(rnd(x*2+6,y*3+11)*grassTones.length)];
+ poly([[0,-H*.52],[W*.51,0],[0,H*.52],[-W*.51,0]],color,null);
+ // Organic watercolor patches remove old chessboard seams
+ for(let i=0;i<3;i++){
+  const px=(rnd(x*17+i,y*13+3)-.5)*74,py=(rnd(x*9+6,y*19+i)-.5)*29;
+  oval(px,py,10+rnd(i,x)*9,3.5+rnd(y,i)*4,rnd(i+x,y)>.49?'#aadf7e52':'#6bad5355');
+ }
+ const onPath=(x===4&&y>=2&&y<=12)||(y===9&&x>=2&&x<=12)||((x===10||x===11)&&y===4);
+ if(onPath){
+   poly([[0,-H*.49],[W*.49,0],[0,H*.49],[-W*.49,0]],'#c09c62','#ad8755',.5);
+   poly([[0,-H*.4],[W*.41,0],[0,H*.40],[-W*.41,0]],'#e8c68f','#d7b079',.9);
+   for(let j=0;j<7;j++){
+     let xx=(rnd(x*13+j,y+41)-.5)*66, yy=(rnd(y*14+j,x+7)-.5)*20;
+     oval(xx,yy,1.9+rnd(j,x)*3,1+rnd(j,y)*1.9,j%2?'#fce5a3':'#b99465');
+   }
+   for(let j=0;j<3;j++)grass((j-1)*24,17,(.5+j*.12));
+ }else{
+   for(let j=0;j<4;j++){
+      let xx=(rnd(x*8+j,y*11)-.5)*75,yy=(rnd(x+j,y*12)-.5)*27;
+      if(rnd(j+x*3,y)>.35)grass(xx,yy,.5+rnd(y,j)*.42);
+   }
+   if(r>.68)flower(12+rnd(x,y)*18,-8,.58,r>.86?'#ffce94':'#ffb0c1');
+   if(r<.16)flower(-13,7,.65,'#f6ec96');
+ }
+ ctx.restore();
+}
+function fence(dx,dy,scale=1){ctx.save();ctx.translate(dx,dy);ctx.scale(scale,scale);line(-21,0,21,0,'#a76d3e',5);line(-21,-8,21,-8,'#efd09a',4);for(let i of [-19,0,19]){roundRect(i-3,-17,6,24,2,'#fff0b6','#ac753f',1.3);poly([[i-3,-17],[i,-24],[i+3,-17]],'#fff7c6','#b47e46',1)}ctx.restore()}
+function woodenCrate(x,y,scale=1){ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);poly([[-14,-10],[0,-16],[15,-9],[1,-3]],'#deb27a','#95673e',1);poly([[-14,-10],[1,-3],[1,15],[-14,8]],'#c68b4f','#89582d',1.5);poly([[1,-3],[15,-9],[15,10],[1,15]],'#e9ac63','#89582d',1.5);line(-10,-7,-2,9,'#f3c280',2);line(5,-2,11,9,'#a16a3a',2);ctx.restore()}
+function tree(x=0,y=0,size=1,fruit=false){
+ ctx.save();ctx.translate(x,y+Math.sin(tick*.7+x*2)*.8);ctx.scale(size,size);
+ oval(4,6,29,10,'#305f2854');
+ poly([[-6,2],[-7,-34],[-3,-54],[7,-51],[9,2]],'#a67743','#714726',1.8);
+ line(2,-31,-15,-49,'#875a2c',6);line(3,-45,19,-59,'#9b6532',5);
+ for(let [xx,yy,rr] of [[-24,-46,20],[20,-48,20],[-17,-65,25],[15,-69,26],[0,-84,26],[0,-55,28]]){
+   oval(xx+2,yy+5,rr*1.03,rr*.87,'#225d3655');
+   oval(xx,yy,rr,rr*.84,gradient(xx,yy,rr,'#c6f28b','#31834a'),'#3e8740',1.3);
+   oval(xx-rr*.25,yy-rr*.32,rr*.5,rr*.2,'#e6ffae55');
+ }
+ for(let i=0;i<24;i++){
+   let angle=i*2.39996, rad=13+24*rnd(i,fruit?7:4),
+   xx=Math.cos(angle)*rad,yy=-61+Math.sin(angle)*rad*.85;
+   oval(xx,yy,1.9+rnd(i,15)*1.9,1.2+rnd(i,4)*1.8,i%4?'#c3f78c80':'#356f4173');
+ }
+ if(fruit){
+   for(let [xx,yy] of [[-25,-54],[24,-60],[4,-88],[-2,-42],[15,-75],[-18,-72]]){
+     oval(xx,yy,4.2,4.5,'#e85146','#af372e',.9);
+     oval(xx-1.4,yy-1.5,1.4,1.4,'#ffe9aa');
+     line(xx,yy-4,xx+2,yy-7,'#3e833d',1);
+   }
+ }
+ ctx.restore();
+}
+function bush(x,y,s=1,flowers=false){ctx.save();ctx.translate(x,y);ctx.scale(s,s);oval(0,3,20,8,'#32592740');for(let [xx,yy,r] of [[-14,-7,13],[0,-12,17],[16,-6,13]])oval(xx,yy,r,r*.67,gradient(xx,yy,r,'#a6e96b','#409750'),'#3d8741',1);if(flowers){for(let [a,b] of [[-13,-10],[8,-17],[17,-2]])flower(a,b,1.1,'#ffb6c6')}ctx.restore()}
+function cropArt(type,progress){let a=Math.max(.06,progress),sway=Math.sin(tick*1.9+progress*4)*1.5;ctx.save();ctx.globalAlpha=progress<.12?.65:1;
+if(type==='wheat'){for(let row=0;row<3;row++)for(let col=0;col<3;col++){let x=(col-1)*19+(row-1)*6,y=(row-1)*10+4,height=7+a*26;line(x,y,x+sway,y-height,'#69a54a',2.7);if(a>.2){for(let k=0;k<3;k++){oval(x+sway+(k%2?-4:4),y-height+5+k*5,3+a*2,2.6+a*1.8,'#efd56b','#d4a540',.8)}}}}
+else if(type==='corn'){for(let i=0;i<5;i++){let x=(i-2)*17,y=(i%2)*7-4,h=9+a*34;line(x,y,x+sway,y-h,'#478e42',3.2);poly([[x,y-5],[x-8,y-14*a],[x-17,y-23*a],[x-3,y-14]],'#68bc56');poly([[x,y-13],[x+14,y-28*a],[x+9,y-10],[x,y-4]],'#8ed466');if(a>.5){oval(x+2,y-h*.63,4.7,9,'#f7d65e','#c99d37',1);line(x+2,y-h*.66,x+2,y-h*.95,'#eed793',1.3)}}}
+else if(type==='carrot'){for(let i=0;i<6;i++){let x=(i%3-1)*22+((i/3)|0)*-7,y=(Math.floor(i/3)-.5)*14;oval(x,y+2,8,5,'#8b542b');if(a>.36){poly([[x-5,y-1],[x,y+13*a],[x+6,y-1]],'#ee893f','#c46d2c',1);for(let k=-1;k<=1;k++){line(x,y,x+k*7,y-7-17*a,'#57aa4a',2.7);oval(x+k*6,y-7-16*a,3.5,6,'#74c65d')}}else grass(x,y,.65)}}
+else if(type==='sugar'){for(let i=0;i<6;i++){let x=(i%3-1)*18+(Math.floor(i/3)-.5)*9,y=Math.floor(i/3)*9-7;line(x,y,x,y-32*a,'#86d16c',4);for(let k=0;k<4*a;k++){line(x-2,y-k*7-4,x+2,y-k*7-4,'#cfe998',1)}line(x,y-14*a,x-12,y-23*a,'#54aa4b',3);line(x,y-18*a,x+11,y-29*a,'#73bf52',3)}}
+else if(type==='strawberry'){for(let i=0;i<6;i++){let x=(i%3-1)*18+(Math.floor(i/3)-.5)*5,y=Math.floor(i/3)*8-2;bush(x,y,.35,false);if(a>.4){oval(x+3,y-5,4+a*2,5+a*2,'#f15e5c','#b84040',.6);oval(x+1,y-6,1,1,'#ffdd98')}}}
+else if(type==='pumpkin'){for(let i=0;i<5;i++){let x=(i-2)*19,y=(i%2)*8;oval(x,y,5+a*7,3+a*8,'#f4a54e','#ba6b2c',1);line(x,y-4-a*6,x+3,y-8-a*7,'#489b45',2);line(x-4,y,x-4,y+6,'#e6bc5e',1)}}ctx.restore()}
+function plotArt(plot){drop(48,13);soilTile();if(plot.crop){let c=CROPS[plot.crop],v=Math.min(1,(Date.now()-plot.at)/c.time);cropArt(plot.crop,v);if(v>=1){ctx.save();ctx.translate(0,-38+Math.sin(tick*3)*3);ctx.rotate(-.1);roundRect(-17,-16,34,22,9,'#fff4c5','#d6a95b',2);txt('✓',0,-4,16,'#4ea357','#fff',.4);ctx.restore()}}else{oval(0,-4,11,4,'#d9a15d');grass(-12,3,.5)}}
+function roofShingles(x,y,cols=5,rows=3,w=16,h=9){
+ for(let j=0;j<rows;j++)for(let i=0;i<cols;i++){
+   let a=x+i*w+(j%2)*4,b=y+j*h;
+   line(a,b,a+w*.63,b+h*.27,j%2?'#ffe0a57a':'#883c2a50',1.2);
+   oval(a+w*.22,b+1,1.4,.75,'#ffe8c15c');
+ }
+}
+function label(text,levelLocked=false){ctx.save();let w=Math.min(160,54+text.length*7.1);roundRect(-w/2,-125,w,27,12,'#fff9def5','#d9b47c',2);txt((levelLocked?'🔒 ':'')+text,0,-111,12,'#865532',null,0);ctx.restore()}
+function house(){
+ drop(72,23);
+ // Stone edging, porch and garden patio
+ for(let i=-3;i<4;i++){oval(i*16,20+i%2*2,10,4,i%2?'#dbb995':'#f4d9a6','#ad966d',1);}
+ fence(-64,4,.72);fence(67,4,.75);
+ poly([[-57,-44],[2,-23],[2,20],[-57,-1]],'#f6e8cb','#a1794a',2.2);
+ poly([[2,-23],[57,-49],[57,0],[2,20]],'#e4b886','#a87950',2.2);
+ for(let i=0;i<4;i++){
+  line(-54,-35+i*11,-2,-13+i*11,'#dfc8a6',1.2);
+  line(5,-16+i*11,53,-40+i*11,'#cfa074',1.2);
+ }
+ // clay tiled roof as a three dimensional raised silhouette
+ poly([[-68,-55],[-6,-112],[62,-60],[5,-22]],'#ea8753','#995236',3);
+ poly([[-68,-55],[5,-22],[5,-10],[-68,-43]],'#c25a3d','#97462e',1.5);
+ poly([[5,-22],[62,-60],[62,-47],[5,-10]],'#b95339','#843b31',1.5);
+ for(let row=0;row<4;row++)for(let col=0;col<5;col++){
+    const xx=-55+col*13+row*7, yy=-57-row*9+col*6.4;
+    line(xx,yy,xx+10,yy+5.5,row%2?'#fcb17b':'#a74c3455',1.7);
+ }
+ line(-5,-109,61,-58,'#ffe3a6',3);
+ // brick chimney and animated smoke
+ poly([[21,-86],[21,-112],[38,-113],[38,-89]],'#e6ad79','#985d46',1.8);
+ for(let j=0;j<3;j++)line(22,-100+j*9,38,-101+j*9,'#fff0c777',1.6);
+ poly([[20,-113],[30,-119],[43,-113],[36,-108]],'#855246','#6b3c32',1.7);
+ for(let i=0;i<3;i++){
+  const f=(tick*.3+i*.43)%1.3;
+  oval(31+Math.sin(tick+i)*9+f*6,-120-f*33,4+f*5,3+f*4,'rgba(255,249,232,'+(0.22*(1-f/1.3))+')');
+ }
+ // glowing window and wooden door
+ poly([[20,-19],[47,-29],[47,-5],[20,5]],'#fff1bd','#7e583e',3);
+ poly([[24,-18],[43,-25],[43,-7],[24,1]],'#a3ddce','#f9e3ae',2);
+ poly([[25,-14],[42,-19],[42,-9],[25,-4]],'#ffc87070');
+ line(33,-21,33,-3,'#fff4d4',2.5);
+ poly([[-28,-14],[-8,-6],[-8,15],[-28,7]],'#925d3f','#fff0ce',3);
+ line(-27,-13,-9,14,'#b47a4c',1.2);oval(-13,4,1.8,2,'#ffdb7a');
+ // flowering porch, trellis and steps
+ poly([[-40,-10],[-26,-17],[-3,-7],[-16,1]],'#c99562','#895e39',2);
+ line(-38,-3,-38,16,'#f7d59b',3);line(-5,-3,-5,15,'#f7d59b',3);
+ roundRect(-38,8,34,4,2,'#c18b58','#835333',1);
+ for(let i=0;i<4;i++){flower(-62+i*9,9+i%2*3,.85,['#ffe39d','#ffc0d5','#f29bdb','#e8b0f1'][i]);}
+ bush(60,8,.8,true);bush(-57,12,.56,true);
+ woodenCrate(61,-3,.62);
+}
+function barn(){
+ drop(74,23);
+ poly([[-58,-47],[0,-26],[0,21],[-58,-4]],'#d96a53','#8e3933',2.3);
+ poly([[0,-26],[63,-50],[63,0],[0,21]],'#ad403b','#8e3433',2.3);
+ for(let i=0;i<5;i++){
+  line(-57,-42+i*11,-3,-18+i*11,'#ec9c7b88',1.2);
+  line(4,-20+i*11,60,-42+i*11,'#e1745f88',1.2);
+ }
+ poly([[-69,-51],[-10,-102],[21,-106],[75,-61],[3,-24]],'#5f5557','#393b42',3);
+ poly([[-69,-51],[3,-24],[3,-13],[-69,-39]],'#413d44','#292d34',1.6);
+ poly([[3,-24],[75,-61],[75,-50],[3,-13]],'#70676a','#31333b',1.5);
+ for(let j=0;j<4;j++)for(let i=0;i<6;i++){
+   line(-54+i*14+j*6,-51-j*11+i*5.8,-46+i*14+j*6,-47-j*11+i*5.8,'#d7c3b25c',1.2);
+ }
+ // big white sliding doors with cross braces
+ poly([[-40,-25],[-5,-12],[-5,17],[-40,3]],'#8d3a32','#fff3dd',3);
+ line(-39,-24,-6,16,'#fff5e5',2.4);line(-5,-12,-39,4,'#fff5e5',2.4);
+ line(-22,-17,-22,8,'#f8e6cc',1.8);
+ poly([[24,-33],[46,-40],[46,-18],[24,-11]],'#8bc5ca','#fff2d8',3);
+ line(35,-36,35,-14,'#fff1d8',2);
+ // metal grain silo
+ roundRect(68,-67,27,68,5,'#bf6d5b','#854a43',2);
+ for(let j=0;j<4;j++)line(68,-62+j*16,95,-62+j*16,'#f7b69377',1.7);
+ oval(81,-66,14,7,'#db9880','#78473e',2);
+ poly([[66,-68],[81,-96],[97,-68]],'#65636b','#34353e',2);
+ // hay stacks and herb garden
+ for(let i=0;i<3;i++){roundRect(-80+i*17,0-i%2*8,26,14,4,'#ebbe58','#b7822b',1.2);for(let j=0;j<4;j++)line(-75+i*17+j*5,2-i%2*8,-75+i*17+j*5,9-i%2*8,'#fff2ae88',1);}
+ bush(74,13,.5,true);flower(-62,19,1,'#ffd1d7');
+}
+function coop(){drop(56,19);fence(-43,8,.8);fence(41,12,.7);poly([[-33,-34],[0,-17],[0,15],[-33,1]],'#f9d9a4','#9d7450',2);poly([[0,-17],[36,-34],[36,2],[0,15]],'#e9ac64','#a66d3c',2);poly([[-41,-34],[-2,-70],[41,-38],[1,-16]],'#f39a54','#b36f44',2.3);poly([[1,-16],[41,-38],[41,-29],[1,-7]],'#c87144','#995132');oval(-20,-7,9,13,'#986345','#f8e9b8',2);oval(-18,-8,5,7,'#4f3b29');roundRect(10,-16,14,10,3,'#86cdd0','#fff4ca',2);for(let i=0;i<3;i++)chickenOne(-49+i*38,10+i*3,.76, i*2.3);flower(24,16,.7,'#e9addb')}
+function chickenOne(x,y,s=1,phase=0){ctx.save();ctx.translate(x,y+Math.sin(tick*3+phase)*1.4);ctx.scale(s,s);oval(0,2,14,5,'#315d2e4a');oval(1,-11,14,11,'#fff5db','#a98762',1.4);oval(-7,-13,7,8,'#fff9e9');oval(10,-19,7,7,'#fff9e9','#c99f75',1);poly([[14,-19],[25,-15],[14,-11]],'#f4ad42','#c68629',1);oval(12,-21,1.6,1.6,'#342d25');for(let z=0;z<3;z++)oval(5+z*4,-25-z%2*3,4,4,'#e86358');line(-3,-1,-5,5,'#dd923c',2);line(6,-1,6,5,'#dd923c',2);ctx.restore()}
+function farmer(){
+ctx.save();ctx.translate(Math.sin(tick*4)*.6,Math.sin(tick*6)*1.3);drop(15,7);
+// swaying legs, leather boots and bright blue overalls
+let step=Math.sin(tick*5);line(-6,-2,-7-step*3,8,'#456fa0',5);line(6,-2,7+step*3,8,'#456fa0',5);oval(-7-step*3,8,5,3,'#684735');oval(7+step*3,8,5,3,'#684735');
+roundRect(-13,-33,26,33,9,'#6fb4dc','#326b93',1.7);roundRect(-15,-29,7,19,4,'#f6da8f','#c79669',1);roundRect(8,-29,7,19,4,'#f6da8f','#c79669',1);
+roundRect(-8,-19,16,19,3,'#4c95c8');line(-7,-27,-3,-11,'#f6d19a',3);line(7,-27,3,-11,'#f6d19a',3);oval(-4,-11,1.7,1.7,'#f3dbad');oval(4,-11,1.7,1.7,'#f3dbad');
+oval(0,-41,12,12,'#f7c894','#b98762',1.5);oval(-4,-43,1.4,1.8,'#674a39');oval(4,-43,1.4,1.8,'#674a39');line(-3,-37,3,-37,'#cb8159',1.3);
+poly([[-10,-51],[-4,-62],[7,-62],[12,-51]],'#ebc46b','#b6864e',1.5);oval(0,-52,19,5,'#f4d780','#af814a',1.8);line(-10,-57,11,-57,'#d98d60',3);ctx.restore()}
+function butterfly(x,y,s=1){ctx.save();ctx.translate(x,y+Math.sin(tick*2.9+x)*8);ctx.rotate(Math.sin(tick*1.4+y)*.13);ctx.scale(s,s);let flap=.55+Math.sin(tick*11+x)*.3;oval(-5,-2,6*flap,8,'#ffbdc4','#ec8294',1);oval(5,-2,6*flap,8,'#e8b7ff','#bc84d9',1);oval(-5,5,5*flap,5,'#ffdee2');oval(5,5,5*flap,5,'#f2d9ff');line(0,-5,0,9,'#725d57',2);line(0,-6,-4,-10,'#715b53',1);line(0,-6,4,-10,'#715b53',1);ctx.restore()}
+function cowOne(x,y,s=1){ctx.save();ctx.translate(x,y+Math.sin(tick*2)*.9);ctx.scale(s,s);oval(0,10,31,9,'#244e2950');for(let xx of [-18,-3,15,26]){roundRect(xx,0,6,16,2,'#f8e4c5','#a38569',1);oval(xx+2,15,4,2,'#695047')}
+oval(1,-5,32,19,'#fff1d9','#987c66',1.9);oval(-15,-12,11,8,'#6d554b');oval(16,0,7,8,'#765a51');line(-28,-5,-38,-17,'#8c775c',2);oval(29,-15,15,13,'#fff3df','#9a8168',1.4);oval(29,-10,11,8,'#f3b1ae','#c68485',1);oval(24,-10,1.9,2,'#a76c67');oval(34,-10,1.9,2,'#a76c67');oval(26,-21,2,2,'#4b4034');oval(37,-21,2,2,'#4b4034');poly([[20,-25],[17,-33],[25,-29]],'#f2d9b2','#b39673',1);poly([[38,-26],[44,-34],[44,-23]],'#f2d9b2','#b39673',1);ctx.restore()}
+function cowBarn(){drop(63,23);fence(-52,10,1);fence(52,-2,.9);poly([[-37,-38],[0,-21],[0,9],[-37,-7]],'#e9b977','#a37b4f',2);poly([[0,-21],[39,-38],[39,-6],[0,9]],'#e4ca94','#9e724a',2);poly([[-47,-41],[-4,-76],[48,-41],[3,-18]],'#85bb79','#587e55',2.5);poly([[3,-18],[48,-41],[48,-32],[3,-9]],'#608e59');poly([[-20,-22],[-2,-14],[-2,7],[-20,0]],'#836247','#e9c897',2);cowOne(-30,26,.65);cowOne(37,17,.74);bush(-55,-5,.5)}
+function sheepOne(x,y,scale=1,phase=0){
+ ctx.save();const bounce=Math.sin(tick*2.4+phase)*1.7;ctx.translate(x+Math.sin(tick*.5+phase)*2,y+bounce);ctx.scale(scale,scale);
+ oval(0,9,30,9,'#28582f53');
+ for(let dx of [-16,-5,13,23]){roundRect(dx,0,7,16,3,'#6c5147','#553a35',.8);oval(dx+3,15,4,2,'#49362d');}
+ for(let [dx,dy,rr] of [[-18,-17,11],[-2,-22,13],[15,-19,12],[-24,-5,12],[-7,-8,14],[15,-7,12],[1,1,12]]){oval(dx,dy,rr,rr*.94,gradient(dx,dy,rr,'#fffef2','#d6cfb9'),'#bbb09b',1);}
+ oval(26,-15,14,12,'#8c6856','#694d42',1.3);oval(15,-21,7,4,'#806352');oval(37,-22,7,4,'#806352');
+ oval(30,-19,2.6,2.6,'#272f2a');oval(39,-17,2.5,2.5,'#272f2a');oval(36,-9,6,3,'#b7817e');
+ oval(2,-29,12,6,'#fffbed','#dbd1bc',1);ctx.restore();
+}
+function sheepPen(){
+ drop(57,18);oval(0,3,60,20,'#73b25a','#569544',1.5);
+ for(let [x,y,scale] of [[-45,10,.8],[47,9,.8],[-25,19,.8],[27,20,.8]])fence(x,y,scale);
+ poly([[-43,-28],[-13,-42],[17,-29],[17,-4],[-43,8]],'#eecda0','#a87849',1.7);
+ poly([[-54,-30],[-11,-60],[29,-39],[-1,-12]],'#dc8e5d','#a96745',2.5);
+ poly([[-54,-30],[-1,-12],[-1,-6],[-54,-24]],'#bc6f46','#955536',1.3);
+ oval(-26,-5,8,11,'#6c4c37','#f2d8a3',1.6);
+ woodenCrate(48,-1,.56);
+ sheepOne(-34,24,.67,0);sheepOne(15,24,.75,1.9);sheepOne(48,16,.5,3.2);
+ flower(-52,21,.7,'#ffcaed');flower(52,22,.8,'#fff4a9');
+}
+function animalBubble(key){
+ const c=ANIMALS[key],a=s.animals[key];if(!a)return;
+ const locked=s.level<c.lvl,ready=!locked&&(a.ready||(a.end&&a.end<=Date.now())),busy=!locked&&a.end&&!ready;
+ const bob=Math.sin(tick*2.8+c.x)*3;
+ ctx.save();ctx.translate(0,-104+bob);
+ oval(0,0,17,17,ready?'#fff1ae':locked?'#d4c8ac':'#fff8dc',ready?'#eeaa43':'#bf9762',2);
+ txt(locked?'🔒':ready?GOODS[c.item].icon:busy?'⏳':'🌿',0,0,16,'#6d4728',null,0);
+ ctx.restore();
+}
+function factoryBase(color1,color2,roofCol,icon='✿',factory='bakery'){drop(63,17);poly([[-45,-39],[1,-19],[1,23],[-45,2]],color1,'#94654a',2);poly([[1,-19],[49,-42],[49,3],[1,23]],color2,'#916448',2);for(let j=0;j<3;j++){line(-42,-31+j*13,-1,-12+j*13,'#fff7e344',1.4);line(4,-12+j*13,45,-31+j*13,'#fff7e333',1.3)}
+poly([[-55,-40],[-9,-81],[56,-45],[5,-17]],roofCol,'#996651',2.5);poly([[-55,-40],[5,-17],[5,-6],[-55,-29]],shade(roofCol,-21),'#935a40',1.4);poly([[5,-17],[56,-45],[56,-32],[5,-6]],shade(roofCol,14),'#935a40',1.5);
+poly([[-33,-18],[-13,-9],[-13,11],[-33,2]],'#b87a54','#f8e1b4',2);poly([[21,-24],[42,-32],[42,-11],[21,-3]],'#99d3d5','#ffefcf',3);line(30,-28,30,-7,'#fff3dc',2);roundRect(-20,-62,37,21,9,'#fff7cf','#e1b77d',2);txt(icon,-1,-51,14,'#9d6d50',null,0);
+if(factory==='bakery'){poly([[28,-70],[28,-92],[43,-95],[43,-69]],'#cb9580','#956e61',2);poly([[26,-92],[45,-97],[46,-91],[25,-87]],'#a86e63');}else if(factory==='mill'){poly([[32,-69],[40,-84],[46,-71]],'#be995f');line(39,-90,39,-34,'#aa854a',4);for(let a=0;a<4;a++){let ang=a*Math.PI/2+tick*.8,xx=39,yy=-90;line(xx,yy,xx+Math.cos(ang)*24,yy+Math.sin(ang)*24,'#f3dfb3',7);line(xx,yy,xx+Math.cos(ang)*24,yy+Math.sin(ang)*24,'#aa8a5d',1.5)}}else if(factory==='sugarmill'){roundRect(30,-102,15,42,4,'#eccf9e','#ab846d',2);}woodenCrate(-51,19,.73);}
+function bakery(){factoryBase('#ffda9c','#eeb28e','#e2807a','🥐','bakery')}function mill(){factoryBase('#f0d7a4','#d8ae74','#d1a56c','🌾','mill')}function dairy(){factoryBase('#c6e9d8','#9fc9dd','#83aee2','🧀','dairy')}function sugarMill(){factoryBase('#f5d4cc','#d5b6db','#c38aca','🍯','sugarmill')}
+function pond(){
+ drop(64,22);
+ oval(0,0,63,31,'#a4bf81','#4c8b56',2);
+ oval(0,-2,58,27,'#368fa1','#217388',2);
+ oval(-7,-9,48,16,'#56bdcc');
+ oval(-18,-13,26,6,'#b7faf478');
+ for(let j=0;j<6;j++){
+   const a=j*.94+tick*.5;
+   oval(Math.sin(a)*38,Math.cos(a)*12-3,5+j*2,1.4,null,'rgba(219,255,248,.42)',1.3);
+ }
+ for(let i=0;i<12;i++){
+   const a=i*Math.PI/6,x=Math.cos(a)*60,y=Math.sin(a)*28;
+   oval(x,y,6+rnd(i,8)*5,4,'#9da58c','#647b6b',1.1);
+ }
+ // Wooden pier, handrail, reeds and lotus pads
+ poly([[-13,11],[12,4],[41,13],[14,23]],'#b87c4b','#7a5836',2);
+ for(let i=0;i<4;i++)line(-8+i*8,10-i*2,16+i*8,20-i*2,'#e6b77f',1.2);
+ roundRect(-9,2,4,21,2,'#8d5b3c');roundRect(37,10,4,20,2,'#8d5b3c');
+ for(let i=0;i<7;i++){
+  const x=-58+i*19,y=15+(i%2)*7;
+  line(x,y,x-4,y-17,'#589655',2);line(x,y,x+5,y-12,'#6ba752',1.8);
+ }
+ oval(-20,-5,10,5,'#66ac60','#387f4b',1);
+ flower(-20,-5,.95,'#f9cbe5');
+ bush(50,-9,.55,true);bush(-54,-12,.55,true);
+}
+function orchard(){for(let i=0;i<3;i++)tree(-34+i*32,(i%2)*13,.6+i*.08,true);fence(0,15,.9)}
+function truck(){drop(54,15); // animated moving delivery truck
+const dx=Date.now()-truckAnim<1900?Math.min(240,(Date.now()-truckAnim)/1900*240):0;
+ctx.save();ctx.translate(dx,0);poly([[-45,-38],[5,-19],[5,5],[-45,-12]],'#f6bc67','#9e6b39',2);poly([[5,-19],[46,-36],[46,-11],[5,5]],'#dba45d','#9e6b39',2);poly([[-50,-43],[0,-24],[48,-43],[4,-63]],'#f9d889','#b5864e',2);roundRect(8,-53,22,12,3,'#e49a67');poly([[-50,-17],[-8,-2],[-8,13],[-50,-1]],'#e98962','#a75e49',2);poly([[-8,-2],[24,-17],[24,-2],[-8,13]],'#f2a26f','#a75e49',2);poly([[1,-4],[18,-12],[18,-3],[1,5]],'#9edcdb','#fff4cb',2);for(let xx of [-32,9]){oval(xx,11,10,10,'#454141','#282a2b',2);oval(xx,11,4.8,4.8,'#f4e3c4')}txt('🚚',-12,-27,15,'#ffffff',null,0);ctx.restore();}
+function marketStall(){drop(50,17);roundRect(-47,-43,94,8,2,'#ad7847','#754b2d',2);for(let x of [-38,35])roundRect(x,-45,7,55,2,'#dcb67d','#976a48',1);poly([[-53,-42],[-40,-74],[38,-74],[55,-42]],'#ffe2ab','#a46c4b',2);for(let i=0;i<6;i++)poly([[-44+i*15,-74],[-31+i*15,-74],[-25+i*15,-42],[-40+i*15,-42]],i%2?'#fff1c7':'#e98270');woodenCrate(-27,-2,.65);woodenCrate(17,-5,.85);txt('🍎',-23,-12,19,'white',null,0);txt('🥬',18,-17,19,'white',null,0)}
+function decorDraw(o){switch(o.type){case 'tree':tree(0,0,1.1,true);break;case 'flower':for(let i=0;i<10;i++)flower((rnd(i,2)-.5)*56,(rnd(i,3)-.5)*20,1.1,['#ffb0cb','#ffdc73','#e9b3ff'][i%3]);bush(0,0,.55,true);break;case 'fountain':drop(31,11);oval(0,-1,32,16,'#e4d4b7','#9a8874',2);oval(0,-3,27,12,'#8ad7df');roundRect(-6,-34,12,28,3,'#f7e2bf','#b59c7a',2);oval(0,-34,10,4,'#8ccfdb');for(let i=-1;i<=1;i++){ctx.beginPath();ctx.moveTo(0,-40);ctx.quadraticCurveTo(i*20,-42,i*20,-5);ctx.strokeStyle='#b0f7f4';ctx.lineWidth=2;ctx.stroke()}break;case 'hay':for(let i=0;i<3;i++){ctx.save();ctx.translate(i*21-25,i%2*9);roundRect(-13,-22,29,20,7,'#f9d668','#c99440',2);for(let k=0;k<4;k++)line(-8+k*5,-18,-8+k*5,-3,'#ebae48',1);ctx.restore()}break;case 'bench':roundRect(-31,-23,63,9,3,'#b98252','#784a2f',2);roundRect(-31,-12,63,10,3,'#d2a16a','#784a2f',2);line(-22,-1,-22,11,'#875a40',4);line(22,-1,22,11,'#875a40',4);break;case 'windmill':drop(36,13);poly([[-13,-3],[-9,-81],[5,-101],[17,-2]],'#e0bf8d','#a08056',2);poly([[-20,-83],[3,-115],[24,-83]],'#f2ddaa','#9a7556',2);for(let i=0;i<4;i++){let a=i*Math.PI/2+tick*.8,px=Math.cos(a)*36,py=Math.sin(a)*36;line(0,-75,px,-75+py,'#ead0a6',9);line(0,-75,px,-75+py,'#987951',1.5)}oval(0,-75,5,5,'#9e704a');break;}}
+function details(){
+ let g=ctx.createLinearGradient(0,0,sw,sh);g.addColorStop(0,'#acd977');g.addColorStop(.52,'#85c566');g.addColorStop(1,'#5a9d55');ctx.fillStyle=g;ctx.fillRect(0,0,sw,sh);
+ // softly painted distant hills with parallax-like undulation
+ for(let j=0;j<4;j++){
+  ctx.beginPath();ctx.moveTo(-30,sh*(.08+j*.12));
+  for(let x=-30;x<=sw+30;x+=15)ctx.lineTo(x,sh*(.08+j*.12)+Math.sin(x*.008+j*.95)*28);
+  ctx.lineTo(sw+35,sh);ctx.lineTo(-35,sh);ctx.closePath();
+  ctx.fillStyle=['#b8e49c','#90ca7c','#70b46d','#559b60'][j];ctx.globalAlpha=.26;ctx.fill();
+ }
+ ctx.globalAlpha=1;
+ let light=ctx.createRadialGradient(sw*.10,sh*.02,10,sw*.13,sh*.08,sw*.96);light.addColorStop(0,'#fff4af38');light.addColorStop(1,'#fff1a000');ctx.fillStyle=light;ctx.fillRect(0,0,sw,sh);
+}
+function tileGround(){const order=[];for(let x=0;x<MAP;x++)for(let y=0;y<MAP;y++)order.push({x,y,sort:x+y});order.sort((a,b)=>a.sort-b.sort||a.x-b.x);
+for(let {x,y}of order){let [px,py]=proj(x,y);ctx.save();ctx.translate(px,py);tile(x,y);ctx.restore();}
+// picturesque plants around borders and paths
+for(let x=0;x<MAP;x++)for(let y=0;y<MAP;y++){let r=rnd(x+44,y+9);if((x<2||x>13||y<2||y>13)&&r>.59){decorations.push({x,y,type:r>.88?'tree':'bush',seed:r})}}
+}
+let decorations=[];
+function renderWorld(){const [cx,cy]=proj(7,7);ctx.save();ctx.translate(sw*.5+panX,sh*.50+panY);ctx.scale(zoom,zoom);ctx.translate(-cx,-cy);
+// base board has gentle thick dirt diamond border
+const center=[(MAP-1)*W*.0,(MAP-1)*H*.5];poly([[0,-W*.0-H*.6],[MAP*W*.5,(MAP-1)*H*.5],[0,(MAP*H)+11],[-MAP*W*.5,(MAP-1)*H*.5]],'#548b47','#5b9349',5);
+let items=[];for(let x=0;x<MAP;x++)for(let y=0;y<MAP;y++){let [px,py]=proj(x,y);items.push({k:'tile',x,y,px,py,z:x+y})}items.sort((a,b)=>a.z-b.z||a.x-b.x);for(let o of items){ctx.save();ctx.translate(o.px,o.py);tile(o.x,o.y);ctx.restore()}
+const actors=[];for(let p of s.plots)actors.push({x:p.x,y:p.y,t:'plot',data:p});for(let o of STATIC)actors.push({x:o.x,y:o.y,t:o.type,data:o});for(let o of s.decors)actors.push({x:o.x,y:o.y,t:'decor',data:o});for(let x=0;x<MAP;x++)for(let y=0;y<MAP;y++){let r=rnd(x+44,y+9);if((x<2||x>13||y<2||y>13)&&r>.39&&!canOccupyForScenery(x,y))actors.push({x,y,t:r>.65?'tree':'bush',seed:r});}
+// intentional little living props
+actors.push({x:4.7+Math.sin(tick*.2)*.35,y:7.8+Math.sin(tick*.27)*.3,t:'farmer',seed:1},{x:10,y:1,t:'tree',seed:3},{x:1,y:11,t:'tree',seed:4},{x:14,y:9,t:'tree',seed:5},{x:1,y:1,t:'tree',seed:6},{x:9,y:12,t:'bush',seed:7},{x:12,y:5,t:'bush',seed:8},{x:4,y:12,t:'bush',seed:9});
+actors.sort((a,b)=>(a.x+a.y)-(b.x+b.y)||a.x-b.x);
+for(let o of actors){let [xx,yy]=proj(o.x,o.y);ctx.save();ctx.translate(xx,yy);if(o.t==='plot')plotArt(o.data);else if(o.t==='house')house();else if(o.t==='barn')barn();else if(o.t==='chicken')coop();else if(o.t==='cow')cowBarn();else if(o.t==='sheep')sheepPen();else if(o.t==='bakery')bakery();else if(o.t==='dairy')dairy();else if(o.t==='mill')mill();else if(o.t==='sugarmill')sugarMill();else if(o.t==='pond')pond();else if(o.t==='orchard')orchard();else if(o.t==='market')marketStall();else if(o.t==='truck')truck();else if(o.t==='decor')decorDraw(o.data);else if(o.t==='farmer')farmer();else if(o.t==='tree')tree(0,0,(.65+o.seed*.35),o.seed>.8);else if(o.t==='bush')bush(0,0,.5+o.seed*.4,o.seed>.7);
+if(['chicken','cow','sheep'].includes(o.t))animalBubble(o.t);
+ if(['dairy','sugarmill'].includes(o.t)&&s.level<FAC[o.t].lvl){oval(0,-92,17,17,'#f7dc9e','#bb8756',2);txt('🔒',0,-93,17,'white',null,0)}
+if(['bakery','dairy','mill','sugarmill'].includes(o.t)&&s.factories[o.t]){let t=s.factories[o.t];if(Date.now()>=t.end){oval(0,-122+Math.sin(tick*3)*3,14,14,'#fff9d4','#e8b15a',2);txt('✓',0,-124+Math.sin(tick*3)*3,14,'#55b35b',null,0)}else{for(let i=0;i<3;i++){let a=(tick*.65+i*.9)%2.7;oval(32+Math.sin(i+a)*6,-100-a*19,5+a*2,3+a,'#fffbe6'+(a<1?'b6':'59'))}}}
+ctx.restore();}
+const bugs=[[4.5,3.5],[10.8,5.2],[9.3,12.3],[2.4,4.1]];for(let i=0;i<bugs.length;i++){let p=bugs[i],px=proj(p[0]+Math.sin(tick*.33+i)*.4,p[1]+Math.cos(tick*.37+i)*.35);ctx.save();ctx.translate(px[0],px[1]-45);butterfly(0,0,.85);ctx.restore()}ctx.restore();}
+function canOccupyForScenery(x,y){return s.plots.some(p=>p.x===x&&p.y===y)||s.decors.some(p=>p.x===x&&p.y===y)||STATIC.some(p=>Math.abs(p.x-x)<(p.span||1)+.2&&Math.abs(p.y-y)<(p.span||1)+.2)}
+function rain(){ctx.save();ctx.strokeStyle='#ddfaff9c';ctx.lineWidth=1.4;for(let i=0;i<110;i++){let x=(rnd(i,111)*sw+tick*80)%sw,y=(rnd(i,919)*sh+tick*580)%sh;line(x,y,x-6,y+16,'#e8ffffaa',1.4)}ctx.restore()}
+function shadeScene(){let day=(Math.sin(Date.now()/1000/75)+1)/2;let amt=Math.max(0,.25-day*.39);if(amt>.04){ctx.fillStyle=`rgba(30,55,105,${Math.min(.27,amt)})`;ctx.fillRect(0,0,sw,sh)}for(let i=0;i<11;i++){let x=rnd(i,33)*sw,y=rnd(i,77)*sh;let v=(Math.sin(tick*2+i)+1)/2;oval(x,y,1+2*v,1+2*v,'rgba(255,250,170,'+(v*.15)+')')}}
+function bursts(x,y,col='#ffee81',n=10){for(let i=0;i<n;i++){let a=Math.PI*2*i/n,sp=40+Math.random()*95;particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-45,life:1,c:col,s:3+Math.random()*5})}}
+function floatText(x,y,t){let [xx,yy]=posOf(x,y);floatings.push({x:xx,y:yy,txt:t,life:1})}
+function renderParticles(dt){for(let i=particles.length-1;i>=0;i--){let p=particles[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=135*dt;p.life-=dt*1.4;if(p.life<=0){particles.splice(i,1);continue}ctx.globalAlpha=p.life;ctx.save();ctx.translate(p.x,p.y);ctx.rotate((1-p.life)*3);roundRect(-p.s/2,-p.s/2,p.s,p.s,2,p.c);ctx.restore()}ctx.globalAlpha=1;for(let i=floatings.length-1;i>=0;i--){let p=floatings[i];p.y-=22*dt;p.life-=dt*.72;if(p.life<=0){floatings.splice(i,1);continue}ctx.globalAlpha=p.life;txt(p.txt,p.x,p.y,17,'#fffddc','#5b8f3d',3)}ctx.globalAlpha=1;}
+let lastT=performance.now();function animate(t){let dt=Math.min(.06,(t-lastT)/1000);lastT=t;tick+=dt;frame++;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,sw,sh);details();renderWorld();shadeScene();if(weatherOn)rain();renderParticles(dt);if(frame%45===0){for(let a of Object.values(s.animals))if(a.end&&a.end<=Date.now()){a.ready=true;a.end=0;save()}}requestAnimationFrame(animate)}
+function handleTap(sx,sy){let c=cellAt(sx,sy),x=c.x,y=c.y;if(x<0||x>=MAP||y<0||y>=MAP)return; if(placeMode){putDecor(x,y);return;}let p=s.plots.find(p=>p.x===x&&p.y===y);if(p){if(!p.crop)pickSeed(p);else harvest(p);return}
+let candidates=STATIC.filter(o=>Math.abs(o.x-x)<(o.span||1)&&Math.abs(o.y-y)<(o.span||1));let o=candidates.sort((a,b)=>Math.abs(a.x-x)+Math.abs(a.y-y)-Math.abs(b.x-x)-Math.abs(b.y-y))[0];if(o){switch(o.type){case'chicken':animalSheet('chicken');return;case'cow':animalSheet('cow');return;case'sheep':animalSheet('sheep');return;case'bakery':case'mill':case'dairy':case'sugarmill':factorySheet(o.type);return;case'truck':ordersSheet();return;case'market':marketSheet();return;case'house':questSheet();return;case'barn':plantsSheet();return;case'pond':toast('🦆 أجواء هادئة عند بركة البط');return;case'orchard':toast('🍎 قريبًا: أشجار الفاكهة المثمرة');return}}
+let deco=s.decors.find(o=>o.x===x&&o.y===y);if(deco){toast('🌻 زينة جميلة!');return}
+if(s.plots.length<PLOT_POS.length&&PLOT_POS.slice(s.plots.length).some(p=>p[0]===x&&p[1]===y)){toast('🌱 اضغط على السوق لتشتري حقلًا هنا!');return}
+}
+const pointers=new Map();let tapStart=null;canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){tapStart={x:e.clientX,y:e.clientY,time:Date.now()};moving=false}else tapStart=null});canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;let prev=pointers.get(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1){let dx=e.clientX-prev.x,dy=e.clientY-prev.y;panX+=dx;panY+=dy;if(tapStart&&Math.hypot(tapStart.x-e.clientX,tapStart.y-e.clientY)>8)moving=true;}else if(pointers.size===2){let arr=[...pointers.values()],ids=[...pointers.keys()];let other=arr[ids.indexOf(e.pointerId)===0?1:0];let prevDist=Math.hypot(prev.x-other.x,prev.y-other.y);let nextDist=Math.hypot(e.clientX-other.x,e.clientY-other.y);if(prevDist>4)zoom=Math.max(.52,Math.min(1.65,zoom*nextDist/prevDist));moving=true;}panX=Math.max(-950,Math.min(950,panX));panY=Math.max(-720,Math.min(720,panY));});canvas.addEventListener('pointerup',e=>{if(!moving&&tapStart&&pointers.size===1&&Date.now()-tapStart.time<700)handleTap(e.clientX,e.clientY);pointers.delete(e.pointerId);tapStart=null});canvas.addEventListener('pointercancel',e=>{pointers.delete(e.pointerId);tapStart=null});canvas.addEventListener('wheel',e=>{e.preventDefault();zoom=Math.max(.52,Math.min(1.65,zoom+(e.deltaY>0?-.07:.07)))},{passive:false});
+weatherOn=s.weather;updateHUD();setTimeout(()=>hints('👆 اضغط على الحقول البنية للزراعة • اسحب لتتجول • قرّب بإصبعين'),3000);requestAnimationFrame(animate);setInterval(save,15000);document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+window.sunnyFarmDebug={get state(){return s},plant,handleTap,posOf,cellAt,openShop:marketSheet,openOrders:ordersSheet,openFactories:factoriesOverview,openAnimals:animalsOverview,render:renderWorld};
+})();
+</script>
+</body>
+</html>
